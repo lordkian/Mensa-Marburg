@@ -8,8 +8,12 @@ public class Setting
     public string TelegramBotToken { get; set; }
     public List<long> AdminsID { get; set; }
     public long ChannelID { get; set; }
-    [JsonIgnore]
-    private static string WorkDir = "./app"; // on docker it is /app
+    [JsonIgnore] private static string WorkDir = "./app"; // on docker it is /app
+    [JsonIgnore] public static Setting Instance { get; private set; }
+
+    private Setting()
+    {
+    }
 
     public static void SaveDefaultSetting()
     {
@@ -17,7 +21,16 @@ public class Setting
             Directory.CreateDirectory(WorkDir);
         using (var sw = new StreamWriter(Path.Combine(WorkDir, "setting.json")))
         {
-            sw.Write(JsonConvert.SerializeObject(new Setting()));
+            Instance = new Setting();
+            sw.Write(JsonConvert.SerializeObject(Instance));
         }
+    }
+
+    public static Setting LoadDefaultSetting()
+    {
+        using var sr = new StreamReader(Path.Combine(WorkDir, "setting.json"));
+        Instance = JsonConvert.DeserializeObject<Setting>(sr.ReadToEnd()) ??
+                   throw new Exception("unable to load Setting");
+        return Instance;
     }
 }
