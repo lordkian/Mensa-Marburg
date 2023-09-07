@@ -16,7 +16,7 @@ public class Setting
     {
     }
 
-    public static void SaveDefaultSetting()
+    public static void SaveSetting()
     {
         if (!Directory.Exists(WorkDir))
             Directory.CreateDirectory(WorkDir);
@@ -27,7 +27,7 @@ public class Setting
         }
     }
 
-    public static Setting LoadDefaultSetting()
+    public static bool LoadSetting()
     {
         using var sr = new StreamReader(Path.Combine(WorkDir, "setting.json"));
         Instance = JsonConvert.DeserializeObject<Setting>(sr.ReadToEnd()) ??
