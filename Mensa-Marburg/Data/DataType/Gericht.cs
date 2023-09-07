@@ -8,4 +8,6 @@ public class Gericht: Speise
     public string Type2 { get; set; }
     public string MenuArt { get; set; }
     public string Kosten { get; set; }
+    
+    public string HashString => $"{EssenType}{Date}{Name}";
 }
