@@ -8,6 +8,7 @@ public class Setting
     public string TelegramBotToken { get; set; }
     public List<long> AdminsID { get; set; }
     public long ChannelID { get; set; }
+    public string BaseURL { get; set; }
     [JsonIgnore] private static string WorkDir = "./app"; // on docker it is /app
     [JsonIgnore] public static Setting Instance { get; private set; }
 
