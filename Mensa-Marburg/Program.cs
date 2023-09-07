@@ -1,3 +1,11 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using Mensa_Marburg;
 
-Console.WriteLine("Hello, World!");
+Console.WriteLine("Starting");
+
+if (!Setting.LoadSetting())
+{
+    Console.WriteLine("Setting File was created. Please fill it");
+    return;
+}
+
+Console.ReadKey();
