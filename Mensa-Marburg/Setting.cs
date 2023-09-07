@@ -22,7 +22,7 @@ public class Setting
         using (var sw = new StreamWriter(Path.Combine(WorkDir, "setting.json")))
         {
             Instance = new Setting();
-            sw.Write(JsonConvert.SerializeObject(Instance));
+            sw.Write(JsonConvert.SerializeObject(Instance, Formatting.Indented));
         }
     }
 
