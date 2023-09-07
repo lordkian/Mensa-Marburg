@@ -20,18 +20,22 @@ public class Setting
     {
         if (!Directory.Exists(WorkDir))
             Directory.CreateDirectory(WorkDir);
-        using (var sw = new StreamWriter(Path.Combine(WorkDir, "setting.json")))
-        {
-            Instance = new Setting();
-            sw.Write(JsonConvert.SerializeObject(Instance, Formatting.Indented));
-        }
+        Instance ??= new Setting();
+        using var sw = new StreamWriter(Path.Combine(WorkDir, "setting.json"));
+        sw.Write(JsonConvert.SerializeObject(Instance, Formatting.Indented));
     }
 
     public static bool LoadSetting()
     {
+        if (!File.Exists(Path.Combine(WorkDir, "setting.json")))
+        {
+            
+            SaveSetting();
+            return false;
+        }
         using var sr = new StreamReader(Path.Combine(WorkDir, "setting.json"));
         Instance = JsonConvert.DeserializeObject<Setting>(sr.ReadToEnd()) ??
                    throw new Exception("unable to load Setting");
-        return Instance;
+        return true;
     }
 }
