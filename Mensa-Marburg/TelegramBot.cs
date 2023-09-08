@@ -36,7 +36,7 @@ public class TelegramBot
         if (message.Text is not { } messageText)
             return;
         var chatId = message.Chat.Id;
-        if (Setting.Instance.AdminsID.Contains(chatId))
+        if (Setting.Instance.AdminsIDs.Contains(chatId))
         {
             Message sentMessage = await botClient.SendTextMessageAsync(
                 chatId: chatId,
