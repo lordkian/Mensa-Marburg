@@ -110,6 +110,12 @@ public class SpeiseContainer
             }
         }
 
+        ParsaGerichte();
+        LoadGenerellKennzeichnungen(doc);
+    }
+
+    private void ParsaGerichte()
+    {
         // Parsa Gerichte
         var grouped = (from g in GerichteTmp
             group g by g.HashString
@@ -137,7 +143,6 @@ public class SpeiseContainer
 
             Gerichte.Add(gerichtTmp);
         }
-        LoadGenerellKennzeichnungen(doc);
     }
 
     private void LoadGenerellKennzeichnungen(HtmlDocument doc)
