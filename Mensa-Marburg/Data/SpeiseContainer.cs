@@ -32,41 +32,50 @@ public class SpeiseContainer
         // load Gerichte
         foreach (var item in doc.DocumentNode.SelectNodes("//div[@class='neo-menu-single-dishes']//tr[not(@data-day)]"))
         {
+            // load vars
             var gericht = new Gericht();
             gericht.SubGerichte.Add(new SubGericht());
-            try
-            {
-                gericht.SubGerichte[0].Type2 = item.Attributes["data-type2"].Value.Trim();
-            }
-            catch (Exception e)
-            {
-                gericht.SubGerichte[0].Type2 = "";
-            }
-
-            var essenTypeTmp = item.Attributes["data-type"].Value.Trim();
-            if (essenTypeTmp.Contains(" "))
+            // load Type2, Mensa & Date
+            gericht.SubGerichte[0].Type2 = TryDo(() => item.Attributes["data-type2"].Value.Trim());
+            gericht.SubGerichte[0].Mensa = TryDo(() => MensaDic[item.Attributes["data-canteen"].Value.Trim()]);
+            gericht.Date = TryDo(() => item.Attributes["data-date"].Value.Trim());
+            // load EssenType
+            var essenTypeTmp = TryDo(() => item.Attributes["data-type"].Value.Trim());
+            if (essenTypeTmp == "")
+                gericht.EssenType = "";
+            else if (essenTypeTmp.Contains(" "))
                 essenTypeTmp.Split(" ").ToList().ForEach(s => { gericht.EssenType += " / " + EssenTypeDic[s]; });
             else
                 gericht.EssenType = EssenTypeDic[essenTypeTmp];
+            // load Kosten & MenuArt
+            gericht.Kosten = TryDo(() =>
+                item.SelectSingleNode(".//td[@class=\"neo-menu-single-price\"]/span").InnerText.Trim());
+            gericht.SubGerichte[0].MenuArt = TryDo(() => 
+                item.SelectSingleNode(".//span[@class=\"neo-menu-single-type\"]").InnerText.Trim());
 
-
-            gericht.SubGerichte[0].Mensa = MensaDic[item.Attributes["data-canteen"].Value.Trim()];
-            gericht.Date = item.Attributes["data-date"].Value.Trim();
-
-            gericht.Kosten = item.SelectSingleNode(".//td[@class=\"neo-menu-single-price\"]/span").InnerText.Trim();
-            gericht.SubGerichte[0].MenuArt =
-                item.SelectSingleNode(".//span[@class=\"neo-menu-single-type\"]").InnerText.Trim();
-
+            // load Name & Kennzeichnungen
             var node = item.SelectSingleNode(".//span[@class=\"neo-menu-single-title\"]");
             gericht.Name = node.InnerText.Trim();
             var kennzeichnungenNode = node.SelectNodes(".//abbr");
-            if ( kennzeichnungenNode is { Count: > 0 })
+            if (kennzeichnungenNode is { Count: > 0 })
                 foreach (var item2 in kennzeichnungenNode)
                 {
                     gericht.Kennzeichnungen.TryAdd(item2.InnerText, item2.Attributes["title"].Value.Trim());
                 }
 
             Gerichte.Add(gericht);
+        }
+    }
+
+    private static string TryDo(Func<string> func)
+    {
+        try
+        {
+            return func();
+        }
+        catch (Exception e)
+        {
+            return "";
         }
     }
 }
