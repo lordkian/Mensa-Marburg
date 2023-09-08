@@ -26,6 +26,16 @@ public class SpeiseContainer
         // load function vars
         var loader = new HtmlWeb();
         var doc = loader.Load(Setting.Instance.BaseURL);
+  
+        LoadDictionary(doc);
+        LoadGerichte(doc);
+        LoadBeilagen(doc);
+        ParsaGerichte();
+        LoadGenerellKennzeichnungen(doc);
+    }
+
+    private void LoadDictionary(HtmlDocument doc)
+    {
         // load Dics
         foreach (var item in doc.DocumentNode.SelectNodes("//select[@class='neo-menu-single-filter-type']/option"))
             if (item.Attributes.Contains("value"))
@@ -33,10 +43,6 @@ public class SpeiseContainer
         foreach (var item in doc.DocumentNode.SelectNodes("//select[@class='neo-menu-single-canteens']/option"))
             if (item.Attributes.Contains("value"))
                 MensaDic[item.Attributes["value"].Value.Trim()] = item.InnerText.Trim();
-        LoadGerichte(doc);
-        LoadBeilagen(doc);
-        ParsaGerichte();
-        LoadGenerellKennzeichnungen(doc);
     }
 
     private void LoadGerichte(HtmlDocument doc)
