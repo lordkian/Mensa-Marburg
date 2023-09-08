@@ -50,7 +50,7 @@ public class SpeiseContainer
             // load Kosten & MenuArt
             gericht.Kosten = TryDo(() =>
                 item.SelectSingleNode(".//td[@class=\"neo-menu-single-price\"]/span").InnerText.Trim());
-            gericht.SubGerichte[0].MenuArt = TryDo(() => 
+            gericht.SubGerichte[0].MenuArt = TryDo(() =>
                 item.SelectSingleNode(".//span[@class=\"neo-menu-single-type\"]").InnerText.Trim());
 
             // load Name & Kennzeichnungen
@@ -64,6 +64,44 @@ public class SpeiseContainer
                 }
 
             Gerichte.Add(gericht);
+        }
+
+        // load Beilagen
+        foreach (var item in doc.DocumentNode.SelectNodes("//div[@class=\"neo-module-inner modal-content\"]"))
+        {
+            // find BeilageType
+            var beilageTypeText = item.SelectSingleNode("./h2").InnerText.Trim();
+            BeilageType beilageTypeEnum;
+            switch (beilageTypeText)
+            {
+                case "SUPPEN":
+                    beilageTypeEnum = BeilageType.Suppen;
+                    break;
+                case "WARME SPEISEN":
+                    beilageTypeEnum = BeilageType.warme_Speisen;
+                    break;
+                case "DESSERT":
+                    beilageTypeEnum = BeilageType.Dessert;
+                    break;
+                case "SALAT":
+                    beilageTypeEnum = BeilageType.Salat;
+                    break;
+                default:
+                    beilageTypeEnum = BeilageType.Unbekant;
+                    break;
+            }
+            // load Beilage infos
+            foreach (var item2 in item.SelectNodes("./div/table"))
+            {
+                var beilage = new Beilage() { Type = beilageTypeEnum };
+                var node = item.SelectSingleNode(".//span[@class=\"neo-menu-single-title\"]");
+                beilage.Name = node.InnerText.Trim();
+                foreach (var item3 in node.SelectNodes(".//abbr"))
+                {
+                    beilage.Kennzeichnungen.TryAdd(item3.InnerText.Trim(), item3.Attributes["title"].Value.Trim());
+                }
+                Beilagen.Add(beilage);
+            }
         }
     }
 
