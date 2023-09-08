@@ -70,6 +70,14 @@ public class SpeiseContainer
             GerichteTmp.Add(gericht);
         }
 
+        LoadBeilagen(doc);
+
+        ParsaGerichte();
+        LoadGenerellKennzeichnungen(doc);
+    }
+
+    private void LoadBeilagen(HtmlDocument doc)
+    {
         // load Beilagen
         foreach (var item in doc.DocumentNode.SelectNodes("//div[@class=\"neo-module-inner modal-content\"]"))
         {
@@ -109,9 +117,6 @@ public class SpeiseContainer
                 Beilagen.Add(beilage);
             }
         }
-
-        ParsaGerichte();
-        LoadGenerellKennzeichnungen(doc);
     }
 
     private void ParsaGerichte()
