@@ -33,6 +33,14 @@ public class SpeiseContainer
         foreach (var item in doc.DocumentNode.SelectNodes("//select[@class='neo-menu-single-canteens']/option"))
             if (item.Attributes.Contains("value"))
                 MensaDic[item.Attributes["value"].Value.Trim()] = item.InnerText.Trim();
+        LoadGerichte(doc);
+        LoadBeilagen(doc);
+        ParsaGerichte();
+        LoadGenerellKennzeichnungen(doc);
+    }
+
+    private void LoadGerichte(HtmlDocument doc)
+    {
         // load Gerichte
         foreach (var item in doc.DocumentNode.SelectNodes("//div[@class='neo-menu-single-dishes']//tr[not(@data-day)]"))
         {
@@ -69,11 +77,6 @@ public class SpeiseContainer
 
             GerichteTmp.Add(gericht);
         }
-
-        LoadBeilagen(doc);
-
-        ParsaGerichte();
-        LoadGenerellKennzeichnungen(doc);
     }
 
     private void LoadBeilagen(HtmlDocument doc)
