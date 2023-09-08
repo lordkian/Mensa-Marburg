@@ -6,7 +6,7 @@ namespace Mensa_Marburg.Data;
 public class SpeiseContainer
 {
     public List<Gericht> Gerichte { get; private set; }
-    public List<Gericht> ParsedGerichte { get; private set; }
+    public List<Gericht> GerichteTmp { get; private set; }
     public List<Beilage> Beilagen { get; private set; }
     public Dictionary<string, string> EssenTypeDic { get; private set; }
     public Dictionary<string, string> MensaDic { get; private set; }
@@ -15,8 +15,8 @@ public class SpeiseContainer
     {
         // load props
         Gerichte = new List<Gericht>();
-        ParsedGerichte = new List<Gericht>();
         Beilagen = new List<Beilage>();
+        GerichteTmp = new List<Gericht>();
         EssenTypeDic = new Dictionary<string, string>();
         MensaDic = new Dictionary<string, string>();
         // load function vars
@@ -63,7 +63,7 @@ public class SpeiseContainer
                     gericht.Kennzeichnungen.TryAdd(item2.InnerText.Trim(), item2.Attributes["title"].Value.Trim());
                 }
 
-            Gerichte.Add(gericht);
+            GerichteTmp.Add(gericht);
         }
 
         // load Beilagen
@@ -90,6 +90,7 @@ public class SpeiseContainer
                     beilageTypeEnum = BeilageType.Unbekant;
                     break;
             }
+
             // load Beilage infos
             foreach (var item2 in item.SelectNodes("./div/table"))
             {
@@ -100,8 +101,37 @@ public class SpeiseContainer
                 {
                     beilage.Kennzeichnungen.TryAdd(item3.InnerText.Trim(), item3.Attributes["title"].Value.Trim());
                 }
+
                 Beilagen.Add(beilage);
             }
+        }
+
+        // Parsa Gerichte
+        var grouped = (from g in GerichteTmp
+            group g by g.HashString
+            into newGroup
+            select newGroup);
+        foreach (var item in grouped)
+        {
+            // collect common Data
+            var first = item.First();
+            var gerichtTmp = new Gericht();
+            gerichtTmp.Name = item.First().Name;
+            gerichtTmp.EssenType = item.First().EssenType;
+            gerichtTmp.Date = item.First().Date;
+            if (String.IsNullOrEmpty(gerichtTmp.Name) || String.IsNullOrEmpty(gerichtTmp.EssenType) ||
+                String.IsNullOrEmpty(gerichtTmp.Date))
+                continue;
+            gerichtTmp.Kosten = item.First(g => !string.IsNullOrEmpty(g.Kosten) && !g.Kosten.Contains("0,00")).Kosten;
+            // combine other data
+            foreach (var item2 in item)
+            {
+                gerichtTmp.SubGerichte.AddRange(item2.SubGerichte);
+                foreach (var item3 in item2.Kennzeichnungen)
+                    gerichtTmp.Kennzeichnungen.TryAdd(item3.Key, item3.Value);
+            }
+
+            Gerichte.Add(gerichtTmp);
         }
     }
 
