@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using Mensa_Marburg.Data.DataType;
 
@@ -10,6 +11,8 @@ public class SpeiseContainer
     public List<Beilage> Beilagen { get; private set; }
     public Dictionary<string, string> EssenTypeDic { get; private set; }
     public Dictionary<string, string> MensaDic { get; private set; }
+    public Dictionary<string,string> GenerellKennzeichnungen { get; private set; }
+    private Regex CleanWhiteSpace = new Regex("\\s+");
 
     public void DownloadData()
     {
@@ -19,6 +22,7 @@ public class SpeiseContainer
         GerichteTmp = new List<Gericht>();
         EssenTypeDic = new Dictionary<string, string>();
         MensaDic = new Dictionary<string, string>();
+        GenerellKennzeichnungen = new Dictionary<string, string>();
         // load function vars
         var loader = new HtmlWeb();
         var doc = loader.Load(Setting.Instance.BaseURL);
@@ -132,6 +136,14 @@ public class SpeiseContainer
             }
 
             Gerichte.Add(gerichtTmp);
+        }
+        // load GenerellKennzeichnungen
+        foreach (var item in doc.DocumentNode.SelectNodes("//div[@class=\"neo-menu-single-additions\"]//li"))
+        {
+            var str = item.InnerText.Replace("&nbsp;"," ").Trim();
+            str = CleanWhiteSpace.Replace(str, " ");
+            var arr = str.Split(")");
+            GenerellKennzeichnungen.TryAdd(arr[0], arr[1]);
         }
     }
 
