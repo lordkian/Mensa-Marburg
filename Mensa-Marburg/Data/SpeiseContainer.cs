@@ -60,7 +60,7 @@ public class SpeiseContainer
             if (kennzeichnungenNode is { Count: > 0 })
                 foreach (var item2 in kennzeichnungenNode)
                 {
-                    gericht.Kennzeichnungen.TryAdd(item2.InnerText, item2.Attributes["title"].Value.Trim());
+                    gericht.Kennzeichnungen.TryAdd(item2.InnerText.Trim(), item2.Attributes["title"].Value.Trim());
                 }
 
             Gerichte.Add(gericht);
