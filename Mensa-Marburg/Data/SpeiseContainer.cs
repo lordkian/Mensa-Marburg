@@ -137,10 +137,15 @@ public class SpeiseContainer
 
             Gerichte.Add(gerichtTmp);
         }
+        LoadGenerellKennzeichnungen(doc);
+    }
+
+    private void LoadGenerellKennzeichnungen(HtmlDocument doc)
+    {
         // load GenerellKennzeichnungen
         foreach (var item in doc.DocumentNode.SelectNodes("//div[@class=\"neo-menu-single-additions\"]//li"))
         {
-            var str = item.InnerText.Replace("&nbsp;"," ").Trim();
+            var str = item.InnerText.Replace("&nbsp;", " ").Trim();
             str = CleanWhiteSpace.Replace(str, " ");
             var arr = str.Split(")");
             GenerellKennzeichnungen.TryAdd(arr[0], arr[1]);
