@@ -8,13 +8,13 @@ namespace Mensa_Marburg;
 
 public class TelegramBot
 {
-    private TelegramBotClient botClient;
+    private TelegramBotClient _telegramBotClient;
     private CancellationTokenSource cts;
     private Dictionary<string, Action<ITelegramBotClient, Update, CancellationToken>> dictionary;
 
     public TelegramBot()
     {
-        botClient = new TelegramBotClient(Setting.Instance.TelegramBotToken);
+        _telegramBotClient = new TelegramBotClient(Setting.Instance.TelegramBotToken);
         cts = new CancellationTokenSource();
         ReceiverOptions receiverOptions = new()
         {
@@ -26,7 +26,7 @@ public class TelegramBot
             ["/start"] = Start
         };
         
-        botClient.StartReceiving(
+        _telegramBotClient.StartReceiving(
             updateHandler: HandleUpdateAsync,
             pollingErrorHandler: HandlePollingErrorAsync,
             receiverOptions: receiverOptions,
