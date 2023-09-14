@@ -10,7 +10,8 @@ public class TelegramBot
 {
     private TelegramBotClient botClient;
     private CancellationTokenSource cts;
-    
+    private Dictionary<string, Action<ITelegramBotClient, Update, CancellationToken>> dictionary;
+
     public TelegramBot()
     {
         botClient = new TelegramBotClient(Setting.Instance.TelegramBotToken);
@@ -20,6 +21,11 @@ public class TelegramBot
             AllowedUpdates = Array.Empty<UpdateType>()
         };
 
+        dictionary = new Dictionary<string, Action<ITelegramBotClient, Update, CancellationToken>>()
+        {
+            ["/start"] = Start
+        };
+        
         botClient.StartReceiving(
             updateHandler: HandleUpdateAsync,
             pollingErrorHandler: HandlePollingErrorAsync,
@@ -27,21 +33,19 @@ public class TelegramBot
             cancellationToken: cts.Token
         );
     }
+
     private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
         if (update.Message is not { } message)
             return;
-        // Only process text messages
         if (message.Text is not { } messageText)
             return;
         var chatId = message.Chat.Id;
         if (Setting.Instance.AdminsIDs.Contains(chatId))
         {
-            Message sentMessage = await botClient.SendTextMessageAsync(
-                chatId: chatId,
-                text: "You said:\n" + messageText,
-                cancellationToken: cancellationToken);
+            if (dictionary.ContainsKey(messageText))
+                dictionary[messageText](botClient, update, cancellationToken);
         }
         else
         {
@@ -64,5 +68,11 @@ public class TelegramBot
 
         Console.WriteLine(ErrorMessage);
         return Task.CompletedTask;
+    }
+
+    private void Start(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken)
+    {
+        
     }
 }
