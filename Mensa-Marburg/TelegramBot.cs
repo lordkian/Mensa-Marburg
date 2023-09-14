@@ -32,7 +32,9 @@ public class TelegramBot
             ["Add Admin"] = AddAdmin,
             ["Remove Admin"] = RemoveAdmin,
             ["List Admin"] = ListAdmin,
-            ["Set Channel ID"] = SetChannelID
+            ["Set Channel ID"] = SetChannelID,
+            ["Get json dump"] = GetJsonDump,
+            ["Post to Channel"] = PostToChannel
         };
 
         _telegramBotClient.StartReceiving(
@@ -242,6 +244,16 @@ public class TelegramBot
                     cancellationToken: cancellationToken);
             }
         };
+    }
+
+    private void PostToChannel(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken)
+    {
+    }
+
+    private void GetJsonDump(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken)
+    {
     }
 
     #endregion
