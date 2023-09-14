@@ -3,6 +3,7 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Mensa_Marburg;
 
@@ -69,10 +70,24 @@ public class TelegramBot
         Console.WriteLine(ErrorMessage);
         return Task.CompletedTask;
     }
-
+    #region Actions
     private void Start(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
-        
+        var replyKeyboardMarkup = new ReplyKeyboardMarkup(new[]
+        {
+            new KeyboardButton[] { "Admin" },
+            new KeyboardButton[] { "Get json dump" },
+            new KeyboardButton[] { "Post to Channel" },
+        })
+        {
+            ResizeKeyboard = true
+        };
+        botClient.SendTextMessageAsync(
+            chatId: update.Message.Chat.Id,
+            text: "Main Menu:",
+            replyMarkup: replyKeyboardMarkup,
+            cancellationToken: cancellationToken);
     }
+    #endregion
 }
