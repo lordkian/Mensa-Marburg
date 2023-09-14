@@ -24,9 +24,10 @@ public class TelegramBot
 
         dictionary = new Dictionary<string, Action<ITelegramBotClient, Update, CancellationToken>>()
         {
-            ["/start"] = Start
+            ["/start"] = Start,
+            ["Admin"] = Admin
         };
-        
+
         _telegramBotClient.StartReceiving(
             updateHandler: HandleUpdateAsync,
             pollingErrorHandler: HandlePollingErrorAsync,
@@ -70,7 +71,9 @@ public class TelegramBot
         Console.WriteLine(ErrorMessage);
         return Task.CompletedTask;
     }
+
     #region Actions
+
     private void Start(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
@@ -89,5 +92,26 @@ public class TelegramBot
             replyMarkup: replyKeyboardMarkup,
             cancellationToken: cancellationToken);
     }
+
+    private void Admin(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken)
+    {
+        var replyKeyboardMarkup = new ReplyKeyboardMarkup(new[]
+        {
+            new KeyboardButton[] { "List Admin" },
+            new KeyboardButton[] { "Add Admin" },
+            new KeyboardButton[] { "Remove Admin" },
+            new KeyboardButton[] { "Set Channel ID" },
+        })
+        {
+            ResizeKeyboard = true
+        };
+        botClient.SendTextMessageAsync(
+            chatId: update.Message.Chat.Id,
+            text: "Admin Menu:",
+            replyMarkup: replyKeyboardMarkup,
+            cancellationToken: cancellationToken);
+    }
+
     #endregion
 }
