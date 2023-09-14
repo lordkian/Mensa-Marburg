@@ -31,7 +31,8 @@ public class TelegramBot
             ["Admin"] = Admin,
             ["Add Admin"] = AddAdmin,
             ["Remove Admin"] = RemoveAdmin,
-            ["List Admin"] = ListAdmin
+            ["List Admin"] = ListAdmin,
+            ["Set Channel ID"] = SetChannelID
         };
 
         _telegramBotClient.StartReceiving(
@@ -201,6 +202,37 @@ public class TelegramBot
                         text: "The user is not Admin",
                         cancellationToken: cancellationToken);
                 }
+            }
+            else
+            {
+                botClient.SendTextMessageAsync(
+                    chatId: update.Message.Chat.Id,
+                    text: "The user Id is invalid",
+                    cancellationToken: cancellationToken);
+            }
+        };
+    }
+
+    private void SetChannelID(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken)
+    {
+        botClient.SendTextMessageAsync(
+            chatId: update.Message.Chat.Id,
+            text: "Enter new Channel ID",
+            replyMarkup: new ReplyKeyboardRemove(),
+            cancellationToken: cancellationToken);
+        nonKeyboardAction = (botClient, update, cancellationToken, messageText) =>
+        {
+            if (TelegramID.IsMatch(messageText))
+            {
+                Setting.Instance.ChannelID = long.Parse(messageText);
+                Setting.SaveSetting();
+                nonKeyboardAction = null;
+                botClient.SendTextMessageAsync(
+                    chatId: update.Message.Chat.Id,
+                    text: "Done",
+                    cancellationToken: cancellationToken);
+                Start(botClient, update, cancellationToken);
             }
             else
             {
