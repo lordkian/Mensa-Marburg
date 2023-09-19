@@ -57,6 +57,8 @@ public class TelegramBot
         {
             if (dictionary.ContainsKey(messageText))
                 dictionary[messageText](botClient, update, cancellationToken);
+            else
+                nonKeyboardAction?.Invoke(botClient, update, cancellationToken, messageText);
         }
         else
         {
