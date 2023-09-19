@@ -136,20 +136,32 @@ public class TelegramBot
         {
             if (TelegramID.IsMatch(messageText))
             {
-                Setting.Instance.AdminsIDs.Add(long.Parse(messageText));
-                Setting.SaveSetting();
-                nonKeyboardAction = null;
-                botClient.SendTextMessageAsync(
-                    chatId: update.Message.Chat.Id,
-                    text: "Done",
-                    cancellationToken: cancellationToken);
-                Start(botClient, update, cancellationToken);
+                var id = long.Parse(messageText);
+                if (Setting.Instance.AdminsIDs.Contains(id))
+                {
+                    nonKeyboardAction = null;
+                    botClient.SendTextMessageAsync(
+                        chatId: update.Message.Chat.Id,
+                        text:  "The user is already Admin",
+                        cancellationToken: cancellationToken);
+                }
+                else
+                {
+                    Setting.Instance.AdminsIDs.Add(id);
+                    Setting.SaveSetting();
+                    nonKeyboardAction = null;
+                    botClient.SendTextMessageAsync(
+                        chatId: update.Message.Chat.Id,
+                        text: "Done",
+                        cancellationToken: cancellationToken);
+                    Start(botClient, update, cancellationToken);
+                }
             }
             else
             {
                 botClient.SendTextMessageAsync(
                     chatId: update.Message.Chat.Id,
-                    text: "The new user Id is invalid",
+                    text: "The user Id is invalid",
                     cancellationToken: cancellationToken);
             }
         };
