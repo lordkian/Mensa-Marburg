@@ -7,12 +7,13 @@ COPY ["Mensa-Marburg/Mensa-Marburg.csproj", "Mensa-Marburg/"]
 RUN dotnet restore "Mensa-Marburg/Mensa-Marburg.csproj"
 COPY . .
 WORKDIR "/src/Mensa-Marburg"
-RUN dotnet build "Mensa-Marburg.csproj" -c Release -o /app/build
+RUN dotnet build "Mensa-Marburg.csproj" -c Release -o /app/build -p:DefineConstants=IN_DOCKER
 
 FROM build AS publish
 RUN dotnet publish "Mensa-Marburg.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
+VOLUME /data
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Mensa-Marburg.dll"]

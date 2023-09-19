@@ -9,7 +9,13 @@ public class Setting
     public List<long> AdminsIDs { get; private set; }
     public long ChannelID { get; set; }
     public string BaseURL { get; set; }
-    [JsonIgnore] private static string WorkDir = "./app"; // on docker it is /app
+#if IN_DOCKER
+// running inside docker
+    [JsonIgnore] private static string WorkDir = "/data"; 
+#else
+    // running outside of docker
+    [JsonIgnore] private static string WorkDir = "./data";
+#endif
     [JsonIgnore] public static Setting Instance { get; private set; }
 
     private Setting()
