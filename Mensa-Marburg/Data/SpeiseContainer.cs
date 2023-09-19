@@ -146,7 +146,15 @@ public class SpeiseContainer
             if (String.IsNullOrEmpty(gerichtTmp.Name) || String.IsNullOrEmpty(gerichtTmp.EssenType) ||
                 String.IsNullOrEmpty(gerichtTmp.Date))
                 continue;
-            gerichtTmp.Kosten = item.First(g => !string.IsNullOrEmpty(g.Kosten) && !g.Kosten.Contains("0,00")).Kosten;
+            try
+            {
+                 gerichtTmp.Kosten = item.First(g => !string.IsNullOrEmpty(g.Kosten) && !g.Kosten.Contains("0,00")).Kosten;
+            }
+            catch (Exception e)
+            {
+                gerichtTmp.Kosten = "-";
+            }
+         
             // combine other data
             foreach (var item2 in item)
             {
