@@ -9,6 +9,12 @@ public class Scheduler
     private IScheduler scheduler;
     private IJobDetail job;
     private ITrigger trigger;
+    public static Scheduler Instance;
+
+    static Scheduler()
+    {
+        Instance = new Scheduler();
+    }
     
     public async void start()
     {
