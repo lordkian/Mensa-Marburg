@@ -9,14 +9,16 @@ public class Setting
     public List<long> AdminsIDs { get; private set; }
     public long ChannelID { get; set; }
     public string BaseURL { get; set; }
-#if IN_DOCKER
-// running inside docker
-    [JsonIgnore] private static string WorkDir = "/data"; 
-#else
-    // running outside of docker
+
     [JsonIgnore] private static string WorkDir = "./data";
-#endif
+
     [JsonIgnore] public static Setting Instance { get; private set; }
+
+    static Setting()
+    {
+        if (Environment.GetCommandLineArgs().Contains("--in-docker"))
+            WorkDir = "/data";
+    }
 
     private Setting()
     {
@@ -36,10 +38,10 @@ public class Setting
     {
         if (!File.Exists(Path.Combine(WorkDir, "setting.json")))
         {
-            
             SaveSetting();
             return false;
         }
+
         using var sr = new StreamReader(Path.Combine(WorkDir, "setting.json"));
         Instance = JsonConvert.DeserializeObject<Setting>(sr.ReadToEnd()) ??
                    throw new Exception("unable to load Setting");
