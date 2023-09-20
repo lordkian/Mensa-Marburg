@@ -8,31 +8,38 @@ public class Scheduler
     private ISchedulerFactory schedFact;
     private IScheduler scheduler;
     private IJobDetail job;
-    private ITrigger trigger;
+    private ITrigger trigger1 , trigger2;
     public static Scheduler Instance;
 
     static Scheduler()
     {
         Instance = new Scheduler();
     }
-    
+
     public async void start()
     {
         // Initialize scheduler
         schedFact = new StdSchedulerFactory();
         scheduler = await schedFact.GetScheduler();
         await scheduler.Start();
-        
+
         job = JobBuilder.Create<CronJob>()
             .WithIdentity("myJob", "myGroup")
             .Build();
-        
-        trigger = TriggerBuilder.Create()
+
+        trigger1 = TriggerBuilder.Create()
             .WithIdentity("myTrigger", "myGroup")
             .StartNow()
-            .WithCronSchedule("0 0 10 * * ?")
+            .WithCronSchedule("0 0 10 * * ?")// 10 am
             .Build();
         
-        await scheduler.ScheduleJob(job, trigger);
+        trigger1 = TriggerBuilder.Create()
+            .WithIdentity("myTrigger", "myGroup")
+            .StartNow()
+            .WithCronSchedule("0 20 14 * * ?")// 2:20 pm
+            .Build();
+
+        await scheduler.ScheduleJob(job,
+            new HashSet<ITrigger>() { trigger1, trigger2 }, replace: true);
     }
 }
