@@ -1,19 +1,15 @@
-﻿FROM mcr.microsoft.com/dotnet/runtime:6.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-COPY ["Mensa-Marburg/Mensa-Marburg.csproj", "Mensa-Marburg/"]
-RUN dotnet restore "Mensa-Marburg/Mensa-Marburg.csproj"
-COPY . .
-WORKDIR "/src/Mensa-Marburg"
-RUN dotnet build "Mensa-Marburg.csproj" -c Release -o /app/build -p:DefineConstants=IN_DOCKER
+# Copy everything
+COPY . ./
+# Restore as distinct layers
+RUN dotnet restore
+# Build and publish a release
+RUN dotnet publish -c Release -o out
 
-FROM build AS publish
-RUN dotnet publish "Mensa-Marburg.csproj" -c Release -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
-VOLUME /data
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Mensa-Marburg.dll"]
+COPY --from=build-env /app/out .
+ENTRYPOINT ["dotnet", "Mensa-Marburg.dll", "--in-docker"]
