@@ -30,9 +30,7 @@ public class Scheduler
         trigger = TriggerBuilder.Create()
             .WithIdentity("myTrigger", "myGroup")
             .StartNow()
-            .WithSimpleSchedule(x => x
-                .WithIntervalInSeconds(10)
-                .RepeatForever())
+            .WithCronSchedule("0 0 10 * * ?")
             .Build();
         
         await scheduler.ScheduleJob(job, trigger);
