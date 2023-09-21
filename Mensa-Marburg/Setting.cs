@@ -4,7 +4,7 @@ namespace Mensa_Marburg;
 
 public class Setting
 {
-    // I cant commit Telegram Bot Token of test bot
+    public bool IsSet { get; set; }
     public string TelegramBotToken { get; set; }
     public List<long> AdminsIDs { get; private set; }
     public long ChannelID { get; set; }
@@ -52,5 +52,6 @@ public class Setting
     public static void SetNewInstance()
     {
         Instance ??= new Setting();
+        Instance.IsSet = false;
     }
 }
