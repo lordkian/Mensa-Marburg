@@ -67,4 +67,15 @@ public class Operator
 
         TelegramBot.Instance.PostToChannel(text);
     }
+
+    public void PostToWochePlanChannel()
+    {
+        if (CurrentSpeiseContainer == null)
+            throw new Exception("SpeiseContainer is null");
+        if ((CurrentSpeiseContainer.DownloadTime - DateTime.Now).Hours > 0)
+            throw new Exception("SpeiseContainer is too old");
+        
+      //  var text = "This Week"
+        
+    }
 }
