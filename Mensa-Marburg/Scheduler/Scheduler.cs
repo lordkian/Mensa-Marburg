@@ -7,8 +7,8 @@ public class Scheduler
 {
     private ISchedulerFactory schedFact;
     private IScheduler scheduler;
-    private IJobDetail job;
-    private ITrigger trigger1 , trigger2;
+    private IJobDetail tagJob, nachmittagJob, wocheJob;
+    private ITrigger tagTrigger, nachmittagTrigger, wocheTrigger;
     public static Scheduler Instance;
 
     static Scheduler()
@@ -23,23 +23,36 @@ public class Scheduler
         scheduler = await schedFact.GetScheduler();
         await scheduler.Start();
 
-        job = JobBuilder.Create<CronJob>()
-            .WithIdentity("myJob", "myGroup")
+        tagJob = JobBuilder.Create<CronJob>()
+            .WithIdentity("tagJob", "tagGroup")
+            .Build();
+        nachmittagJob = JobBuilder.Create<CronJob>()
+            .WithIdentity("nachmittagJob", "nachmittagGroup")
+            .Build();
+        wocheJob = JobBuilder.Create<CronJob>()
+            .WithIdentity("wocheJob", "wocheGroup")
             .Build();
 
-        trigger1 = TriggerBuilder.Create()
-            .WithIdentity("myTrigger", "myGroup")
+        tagTrigger = TriggerBuilder.Create()
+            .WithIdentity("tagTrigger", "tagGroup")
             .StartNow()
-            .WithCronSchedule("0 0 10 * * ?")// 10 am
-            .Build();
-        
-        trigger1 = TriggerBuilder.Create()
-            .WithIdentity("myTrigger", "myGroup")
-            .StartNow()
-            .WithCronSchedule("0 20 14 * * ?")// 2:20 pm
+            .WithCronSchedule("0 30 10 ? * MON-FRI") // 10:30 am weekdays
             .Build();
 
-        await scheduler.ScheduleJob(job,
-            new HashSet<ITrigger>() { trigger1, trigger2 }, replace: true);
+        nachmittagTrigger = TriggerBuilder.Create()
+            .WithIdentity("nachmittagTrigger", "nachmittagGroup")
+            .StartNow()
+            .WithCronSchedule("0 20 14 ? * MON-FRI") // 2:20 pm weekdays
+            .Build();
+
+        wocheTrigger = TriggerBuilder.Create()
+            .WithIdentity("wocheTrigger", "wocheGroup")
+            .StartNow()
+            .WithCronSchedule("0 0 10 ? * MON") // 10 am mondays
+            .Build();
+
+        await scheduler.ScheduleJob(tagJob,tagTrigger);
+        await scheduler.ScheduleJob(nachmittagJob,nachmittagTrigger);
+        await scheduler.ScheduleJob(wocheJob,wocheTrigger);
     }
 }
