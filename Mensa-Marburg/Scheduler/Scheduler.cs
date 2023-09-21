@@ -9,7 +9,7 @@ public class Scheduler
     private IScheduler scheduler;
     private IJobDetail tagJob, nachmittagJob, wocheJob;
     private ITrigger tagTrigger, nachmittagTrigger, wocheTrigger;
-    public static Scheduler Instance;
+    public static readonly Scheduler Instance;
 
     static Scheduler()
     {

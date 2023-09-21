@@ -10,7 +10,7 @@ namespace Mensa_Marburg;
 
 public class TelegramBot
 {
-    public static TelegramBot Instance;
+    public static readonly TelegramBot Instance;
     private TelegramBotClient _telegramBotClient;
     private CancellationTokenSource cts;
     private Dictionary<string, Action<ITelegramBotClient, Update, CancellationToken>> dictionary;
