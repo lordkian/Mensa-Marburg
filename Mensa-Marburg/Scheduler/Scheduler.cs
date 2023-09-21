@@ -16,13 +16,32 @@ public class Scheduler
         Instance = new Scheduler();
     }
 
-    public async void start()
+    public async void Init()
     {
         // Initialize scheduler
         schedFact = new StdSchedulerFactory();
         scheduler = await schedFact.GetScheduler();
         await scheduler.Start();
 
+        InitJobsAndTrigers();
+
+        StartSchedule();
+    }
+
+    public async void StartSchedule()
+    {
+        await scheduler.ScheduleJob(tagJob, tagTrigger);
+        await scheduler.ScheduleJob(nachmittagJob, nachmittagTrigger);
+        await scheduler.ScheduleJob(wocheJob, wocheTrigger);
+    }
+    
+    public async void StopSchedule()
+    {
+        await scheduler.Shutdown();
+    }
+
+    private void InitJobsAndTrigers()
+    {
         tagJob = JobBuilder.Create<CronJob>()
             .WithIdentity("tagJob", "tagGroup")
             .Build();
@@ -50,9 +69,5 @@ public class Scheduler
             .StartNow()
             .WithCronSchedule("0 0 10 ? * MON") // 10 am mondays
             .Build();
-
-        await scheduler.ScheduleJob(tagJob,tagTrigger);
-        await scheduler.ScheduleJob(nachmittagJob,nachmittagTrigger);
-        await scheduler.ScheduleJob(wocheJob,wocheTrigger);
     }
 }
