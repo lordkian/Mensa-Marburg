@@ -4,7 +4,7 @@ namespace Mensa_Marburg;
 
 public class Operator
 {
-    public SpeiseContainer SpeiseContainer { get; set; }
+    public SpeiseContainer SpeiseContainer { get; private set; }
     public static Operator Instance;
 
     static Operator()
