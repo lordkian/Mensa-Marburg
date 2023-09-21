@@ -10,7 +10,7 @@ public class Setting
     public long ChannelID { get; set; }
     public string BaseURL { get; set; }
 
-    [JsonIgnore] public static string WorkDir = "./data";
+    [JsonIgnore] public static readonly string WorkDir;
 
     [JsonIgnore] public static Setting Instance { get; private set; }
 
@@ -18,6 +18,8 @@ public class Setting
     {
         if (Environment.GetCommandLineArgs().Contains("--in-docker"))
             WorkDir = "/data";
+        else
+            WorkDir = "./data";
     }
 
     private Setting()
