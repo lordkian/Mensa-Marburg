@@ -16,6 +16,10 @@ public class Scheduler
         Instance = new Scheduler();
     }
 
+    private Scheduler()
+    {
+        
+    }
     public async void Init()
     {
         // Initialize scheduler
