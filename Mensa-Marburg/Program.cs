@@ -15,7 +15,14 @@ else if (!Setting.LoadSetting())
 }
 else if (Setting.Instance.IsSet)
 {
-   
+
+    var bot = TelegramBot.Instance;
+    var sc = Scheduler.Instance;
+    var op = Operator.Instance;
+    sc.Init();
+    
+    Console.WriteLine("fertig");
+    Console.ReadKey();
 }
 
 
