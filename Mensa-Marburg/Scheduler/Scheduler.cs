@@ -42,13 +42,13 @@ public class Scheduler
 
     private void InitJobsAndTrigers()
     {
-        tagJob = JobBuilder.Create<CronJob>()
+        tagJob = JobBuilder.Create<TagJob>()
             .WithIdentity("tagJob", "tagGroup")
             .Build();
-        nachmittagJob = JobBuilder.Create<CronJob>()
+        nachmittagJob = JobBuilder.Create<NachmittagJob>()
             .WithIdentity("nachmittagJob", "nachmittagGroup")
             .Build();
-        wocheJob = JobBuilder.Create<CronJob>()
+        wocheJob = JobBuilder.Create<WocheJob>()
             .WithIdentity("wocheJob", "wocheGroup")
             .Build();
 
