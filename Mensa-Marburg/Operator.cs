@@ -33,7 +33,7 @@ public class Operator
         sw.Close();
     }
 
-    public void PostToChannel()
+    public void PostToChannel(bool mittagUpdate)
     {
         if (CurrentSpeiseContainer == null)
             throw new Exception("SpeiseContainer is null");
@@ -47,7 +47,8 @@ public class Operator
             select s
         ).ToList();
 
-        var text = "Today Menu\n";
+        var text = mittagUpdate ? "Today Menu\n" : "Today Menu (update)\n";;
+     
         foreach (var item in todayFoods)
         {
             text += $"{item.EssenType}: {item.Name} ({item.Kosten})\nKennzeichnungen: ";
