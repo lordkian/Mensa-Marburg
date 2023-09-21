@@ -31,22 +31,26 @@ public class Setting
     {
         if (!Directory.Exists(WorkDir))
             Directory.CreateDirectory(WorkDir);
-        Instance ??= new Setting();
+        if (Instance == null)
+            throw new Exception("Instance in null");
         using var sw = new StreamWriter(Path.Combine(WorkDir, "setting.json"));
         sw.Write(JsonConvert.SerializeObject(Instance, Formatting.Indented));
     }
 
     public static bool LoadSetting()
     {
-        if (!File.Exists(Path.Combine(WorkDir, "setting.json")))
-        {
-            SaveSetting();
+        var file = Path.Combine(WorkDir, "setting.json");
+        if (!File.Exists(file))
             return false;
-        }
 
-        using var sr = new StreamReader(Path.Combine(WorkDir, "setting.json"));
+        using var sr = new StreamReader(file);
         Instance = JsonConvert.DeserializeObject<Setting>(sr.ReadToEnd()) ??
                    throw new Exception("unable to load Setting");
         return true;
+    }
+
+    public static void SetNewInstance()
+    {
+        Instance ??= new Setting();
     }
 }
