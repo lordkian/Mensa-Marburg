@@ -10,7 +10,7 @@ public class Setting
     public long ChannelID { get; set; }
     public string BaseURL { get; set; }
 
-    [JsonIgnore] private static string WorkDir = "./data";
+    [JsonIgnore] public static string WorkDir = "./data";
 
     [JsonIgnore] public static Setting Instance { get; private set; }
 
