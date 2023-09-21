@@ -38,7 +38,7 @@ public class Operator
         if (CurrentSpeiseContainer == null)
             throw new Exception("SpeiseContainer is null");
         if ((CurrentSpeiseContainer.DownloadTime - DateTime.Now).Hours > 0)
-            throw new Exception("SpeiseContainer is too old");
+            LoadSpeiseContainer();
 
         var today = DateTime.Today.ToString("yyyy-MM-dd");
         var todayFoods = (
@@ -73,7 +73,7 @@ public class Operator
         if (CurrentSpeiseContainer == null)
             throw new Exception("SpeiseContainer is null");
         if ((CurrentSpeiseContainer.DownloadTime - DateTime.Now).Hours > 0)
-            throw new Exception("SpeiseContainer is too old");
+            LoadSpeiseContainer();
         
       //  var text = "This Week"
         
