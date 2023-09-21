@@ -11,7 +11,8 @@ public class SpeiseContainer
     public List<Beilage> Beilagen { get; private set; }
     public Dictionary<string, string> EssenTypeDic { get; private set; }
     public Dictionary<string, string> MensaDic { get; private set; }
-    public Dictionary<string,string> GenerellKennzeichnungen { get; private set; }
+    public Dictionary<string, string> GenerellKennzeichnungen { get; private set; }
+    public DateTime DownloadTime { get; set; }
     private Regex CleanWhiteSpace = new Regex("\\s+");
 
     public void DownloadData()
@@ -26,7 +27,7 @@ public class SpeiseContainer
         // load function vars
         var loader = new HtmlWeb();
         var doc = loader.Load(Setting.Instance.BaseURL);
-  
+
         LoadDictionary(doc);
         LoadGerichte(doc);
         LoadBeilagen(doc);
@@ -148,13 +149,14 @@ public class SpeiseContainer
                 continue;
             try
             {
-                 gerichtTmp.Kosten = item.First(g => !string.IsNullOrEmpty(g.Kosten) && !g.Kosten.Contains("0,00")).Kosten;
+                gerichtTmp.Kosten = item.First(g => !string.IsNullOrEmpty(g.Kosten) && !g.Kosten.Contains("0,00"))
+                    .Kosten;
             }
             catch (Exception e)
             {
                 gerichtTmp.Kosten = "-";
             }
-         
+
             // combine other data
             foreach (var item2 in item)
             {
