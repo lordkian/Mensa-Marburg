@@ -119,10 +119,12 @@ public class SpeiseContainer
                 var beilage = new Beilage() { Type = beilageTypeEnum };
                 var node = item.SelectSingleNode(".//span[@class=\"neo-menu-single-title\"]");
                 beilage.Name = node.InnerText.Trim();
-                foreach (var item3 in node.SelectNodes(".//abbr"))
-                {
-                    beilage.Kennzeichnungen.TryAdd(item3.InnerText.Trim(), item3.Attributes["title"].Value.Trim());
-                }
+                var kennzeichnungenNode = node.SelectNodes(".//abbr");
+                if (kennzeichnungenNode is { Count: > 0 })
+                    foreach (var item3 in kennzeichnungenNode)
+                    {
+                        beilage.Kennzeichnungen.TryAdd(item3.InnerText.Trim(), item3.Attributes["title"].Value.Trim());
+                    }
 
                 Beilagen.Add(beilage);
             }
