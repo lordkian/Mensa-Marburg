@@ -38,8 +38,11 @@ public class TelegramBot
             ["Remove Admin"] = RemoveAdmin,
             ["List Admin"] = ListAdmin,
             ["Set Channel ID"] = SetChannelID,
+            ["Channel" ] = Channel,
             ["Get json dump"] = GetJsonDump,
-            ["Post to Channel"] = PostToChannel
+            ["Post to Channel"] = PostToChannel,
+            ["Start Auto send"] = StartAutoSend,
+            ["Stop Auto send"] = StopAutoSend
         };
 
         _telegramBotClient.StartReceiving(
@@ -105,7 +108,7 @@ public class TelegramBot
         {
             new KeyboardButton[] { "Admin" },
             new KeyboardButton[] { "Get json dump" },
-            new KeyboardButton[] { "Post to Channel" },
+            new KeyboardButton[] { "Channel" },
         })
         {
             ResizeKeyboard = true
@@ -117,6 +120,25 @@ public class TelegramBot
             cancellationToken: cancellationToken);
     }
 
+    private void Channel(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken)
+    {
+        var replyKeyboardMarkup = new ReplyKeyboardMarkup(new[]
+        {
+            new KeyboardButton[] { "Post to Channel" },
+            new KeyboardButton[] { "Stop Auto send" },
+            new KeyboardButton[] { "Start Auto send" },
+        })
+        {
+            ResizeKeyboard = true
+        };
+        botClient.SendTextMessageAsync(
+            chatId: update.Message.Chat.Id,
+            text: "Main Menu:",
+            replyMarkup: replyKeyboardMarkup,
+            cancellationToken: cancellationToken);
+    }
+    
     private void Admin(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
@@ -137,6 +159,17 @@ public class TelegramBot
             cancellationToken: cancellationToken);
     }
 
+    private void StartAutoSend(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken)
+    {
+        Scheduler.Scheduler.Instance.StartSchedule();
+    }
+    private void StopAutoSend(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken)
+    {
+        Scheduler.Scheduler.Instance.StopSchedule();
+    }
+    
     private void AddAdmin(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
