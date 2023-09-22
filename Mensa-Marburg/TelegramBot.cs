@@ -163,11 +163,21 @@ public class TelegramBot
         CancellationToken cancellationToken)
     {
         Scheduler.Scheduler.Instance.ResumeSchedule();
+        botClient.SendTextMessageAsync(
+            chatId: update.Message.Chat.Id,
+            text: "Done",
+            cancellationToken: cancellationToken);
+        Start(botClient, update, cancellationToken);
     }
     private void StopAutoSend(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
         Scheduler.Scheduler.Instance.PauseSchedule();
+        botClient.SendTextMessageAsync(
+            chatId: update.Message.Chat.Id,
+            text: "Done",
+            cancellationToken: cancellationToken);
+        Start(botClient, update, cancellationToken);
     }
     
     private void AddAdmin(ITelegramBotClient botClient, Update update,
