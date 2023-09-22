@@ -21,6 +21,7 @@ public class TelegramBot
     {
         Instance = new TelegramBot();
     }
+
     private TelegramBot()
     {
         _telegramBotClient = new TelegramBotClient(Setting.Instance.TelegramBotToken);
@@ -38,9 +39,11 @@ public class TelegramBot
             ["Remove Admin"] = RemoveAdmin,
             ["List Admin"] = ListAdmin,
             ["Set Channel ID"] = SetChannelID,
-            ["Channel" ] = Channel,
+            ["Channel"] = Channel,
             ["Get json dump"] = GetJsonDump,
-            ["Post to Channel"] = PostToChannel,
+            ["Post daily to Channel"] = PostDailyToChannel,
+            ["Post update to Channel"] = PostUpdateToChannel,
+            ["Post week report to Channel"] = PostWeekReportToChannel,
             ["Start Auto send"] = StartAutoSend,
             ["Stop Auto send"] = StopAutoSend
         };
@@ -60,7 +63,7 @@ public class TelegramBot
             text: text,
             cancellationToken: cts.Token);
     }
-    
+
     private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
@@ -125,7 +128,9 @@ public class TelegramBot
     {
         var replyKeyboardMarkup = new ReplyKeyboardMarkup(new[]
         {
-            new KeyboardButton[] { "Post to Channel" },
+            new KeyboardButton[] { "Post daily to Channel" },
+            new KeyboardButton[] { "Post update to Channel" },
+            new KeyboardButton[] { "Post week report to Channel" },
             new KeyboardButton[] { "Stop Auto send" },
             new KeyboardButton[] { "Start Auto send" },
         })
@@ -138,7 +143,7 @@ public class TelegramBot
             replyMarkup: replyKeyboardMarkup,
             cancellationToken: cancellationToken);
     }
-    
+
     private void Admin(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
@@ -169,6 +174,7 @@ public class TelegramBot
             cancellationToken: cancellationToken);
         Start(botClient, update, cancellationToken);
     }
+
     private void StopAutoSend(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
@@ -179,7 +185,7 @@ public class TelegramBot
             cancellationToken: cancellationToken);
         Start(botClient, update, cancellationToken);
     }
-    
+
     private void AddAdmin(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
@@ -198,7 +204,7 @@ public class TelegramBot
                     nonKeyboardAction = null;
                     botClient.SendTextMessageAsync(
                         chatId: update.Message.Chat.Id,
-                        text:  "The user is already Admin",
+                        text: "The user is already Admin",
                         cancellationToken: cancellationToken);
                 }
                 else
@@ -316,9 +322,22 @@ public class TelegramBot
         };
     }
 
-    private void PostToChannel(ITelegramBotClient botClient, Update update,
+    private void PostDailyToChannel(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
+        Operator.Instance.PostToChannel(false);
+    }
+
+    private void PostUpdateToChannel(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken)
+    {
+        Operator.Instance.PostToChannel(true);
+    }
+
+    private void PostWeekReportToChannel(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken)
+    {
+        Operator.Instance.PostToWochePlanChannel();
     }
 
     private void GetJsonDump(ITelegramBotClient botClient, Update update,
