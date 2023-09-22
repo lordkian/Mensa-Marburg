@@ -38,10 +38,19 @@ public class Scheduler
         await scheduler.ScheduleJob(nachmittagJob, nachmittagTrigger);
         await scheduler.ScheduleJob(wocheJob, wocheTrigger);
     }
-    
+
     public async void StopSchedule()
     {
         await scheduler.Shutdown();
+    }
+    public async void PauseSchedule()
+    {
+        await scheduler.PauseAll();
+    }
+    
+    public async void ResumeSchedule()
+    {
+        await scheduler.ResumeAll();
     }
 
     private void InitJobsAndTrigers()

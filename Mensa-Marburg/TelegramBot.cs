@@ -162,12 +162,12 @@ public class TelegramBot
     private void StartAutoSend(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
-        Scheduler.Scheduler.Instance.StartSchedule();
+        Scheduler.Scheduler.Instance.ResumeSchedule();
     }
     private void StopAutoSend(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
-        Scheduler.Scheduler.Instance.StopSchedule();
+        Scheduler.Scheduler.Instance.PauseSchedule();
     }
     
     private void AddAdmin(ITelegramBotClient botClient, Update update,
