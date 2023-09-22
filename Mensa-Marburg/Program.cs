@@ -23,6 +23,11 @@ else if (Setting.Instance.IsSet)
     
     Console.WriteLine("fertig");
     Console.ReadKey();
+    sc.StopSchedule();
+}
+else
+{
+    Console.WriteLine("Setting File was created. Please fill Setting File");
 }
 
 
