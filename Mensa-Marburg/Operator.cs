@@ -1,4 +1,6 @@
+using System.Globalization;
 using Mensa_Marburg.Data;
+using Mensa_Marburg.Data.DataType;
 using Newtonsoft.Json;
 
 namespace Mensa_Marburg;
@@ -47,8 +49,8 @@ public class Operator
             select s
         ).ToList();
 
-        var text = mittagUpdate ? "Today Menu\n" : "Today Menu (update)\n";;
-     
+        var text = mittagUpdate ? "Today Menu\n" : "Today Menu (update)\n";
+
         foreach (var item in todayFoods)
         {
             text += $"{item.EssenType}: {item.Name} ({item.Kosten})\nKennzeichnungen: ";
@@ -74,8 +76,39 @@ public class Operator
             throw new Exception("SpeiseContainer is null");
         if ((CurrentSpeiseContainer.DownloadTime - DateTime.Now).Hours > 0)
             LoadSpeiseContainer();
-        
-      //  var text = "This Week"
+
+        var text = "This Week Menu:\n\n";
+        var grouped = (from gericht in CurrentSpeiseContainer.Gerichte
+            group gericht by gericht.Date
+            into myGroup
+            select myGroup);
+        var dic = new SortedDictionary<DateTime, List<Gericht>>();
+        foreach (var itemGrouped in grouped)
+        {
+            var date = DateTime.ParseExact(itemGrouped.Key, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            dic[date] = new List<Gericht>();
+            dic[date].AddRange(itemGrouped);
+        }
+
+        var i = 0;
+        foreach (var itemList in dic.Keys)
+        {
+            text += itemList.ToString("ddd, MM.dd") + ":\n\n";
+            foreach (var item in dic[itemList])
+            {
+                text += $"{item.EssenType}: {item.Name} ({item.Kosten})\nKennzeichnungen: ";
+                foreach (var keypair in item.Kennzeichnungen)
+                    text += keypair.Key + ") " + keypair.Value + " ";
+                text += "\n\n";
+            }
+
+            i++;
+            if (i % 2 == 0)
+            {
+                TelegramBot.Instance.PostToChannel(text);
+                text = "";
+            }
+        }
         
     }
 }
