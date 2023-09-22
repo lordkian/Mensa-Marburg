@@ -6,6 +6,10 @@ public class WocheJob : IJob
 {
     public Task Execute(IJobExecutionContext context)
     {
-        return Task.Factory.StartNew(() => { Operator.Instance.PostToWochePlanChannel(); });
+        return Task.Factory.StartNew(() =>
+        {
+            Operator.Instance.LoadSpeiseContainer();
+            Operator.Instance.PostToWochePlanChannel();
+        });
     }
 }

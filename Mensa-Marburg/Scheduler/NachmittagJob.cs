@@ -6,6 +6,10 @@ public class NachmittagJob : IJob
 {
     public Task Execute(IJobExecutionContext context)
     {
-        return Task.Factory.StartNew(() => { Operator.Instance.PostToChannel(true); });
+        return Task.Factory.StartNew(() =>
+        {
+            Operator.Instance.LoadSpeiseContainer();
+            Operator.Instance.PostToChannel(true);
+        });
     }
 }
