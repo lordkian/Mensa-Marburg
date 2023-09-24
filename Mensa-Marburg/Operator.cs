@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.RegularExpressions;
 using Mensa_Marburg.Data;
 using Mensa_Marburg.Data.DataType;
 using Newtonsoft.Json;
@@ -42,7 +43,7 @@ public class Operator
         if ((CurrentSpeiseContainer.DownloadTime - DateTime.Now).Hours > 0)
             LoadSpeiseContainer();
 
-        var today = DateTime.Today.ToString("yyyy-MM-dd");
+        var today = DateTime.Today.AddDays(-2).ToString("yyyy-MM-dd");
         var todayFoods = (
             from s in CurrentSpeiseContainer.Gerichte
             where s.Date == today
@@ -53,7 +54,11 @@ public class Operator
 
         foreach (var item in todayFoods)
         {
-            text += $"{item.EssenType}: {item.Name} ({item.Kosten})\nKennzeichnungen: ";
+            text += $"{item.EssenType}: {item.Name} ({item.Kosten})\n";
+            foreach (var itemSubGericht in item.SubGerichte)
+                text += $"{itemSubGericht.Mensa} : {itemSubGericht.MenuArt}, ";
+
+            text += "Kennzeichnungen: ";
             foreach (var keypair in item.Kennzeichnungen)
                 text += keypair.Key + ") " + keypair.Value + " ";
             text += "\n\n";
@@ -70,7 +75,7 @@ public class Operator
         TelegramBot.Instance.PostToChannel(text);
     }
 
-    public void PostToWochePlanChannel()
+    public void PostToWochePlanChannel(bool newMod = false)
     {
         if (CurrentSpeiseContainer == null)
             throw new Exception("SpeiseContainer is null");
@@ -90,25 +95,19 @@ public class Operator
             dic[date].AddRange(itemGrouped);
         }
 
-        var i = 0;
+        var myRegex = new Regex("\\s*\\([^)]*\\)\\s*");
+        var space = new Regex("\\s+");
         foreach (var itemList in dic.Keys)
         {
             text += itemList.ToString("ddd, MM.dd") + ":\n\n";
             foreach (var item in dic[itemList])
             {
-                text += $"{item.EssenType}: {item.Name} ({item.Kosten})\nKennzeichnungen: ";
-                foreach (var keypair in item.Kennzeichnungen)
-                    text += keypair.Key + ") " + keypair.Value + " ";
-                text += "\n\n";
-            }
-
-            i++;
-            if (i % 2 == 0)
-            {
-                TelegramBot.Instance.PostToChannel(text);
-                text = "";
+                var cleanText = myRegex.Replace(item.Name, " ");
+                cleanText = space.Replace(cleanText, " ");
+                text += $"{item.EssenType}: {cleanText} ({item.Kosten})\n";
             }
         }
-        
+
+        TelegramBot.Instance.PostToChannel(text);
     }
 }
