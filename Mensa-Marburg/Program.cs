@@ -22,7 +22,10 @@ else if (Setting.Instance.IsSet)
     sc.Init();
     
     Console.WriteLine("fertig");
-    Console.ReadKey();
+    if (Environment.GetCommandLineArgs().Contains("--in-docker"))
+        await Task.Delay(Timeout.Infinite, new CancellationToken()).ConfigureAwait(false);
+    else
+        Console.ReadKey();
     sc.StopSchedule();
 }
 else
