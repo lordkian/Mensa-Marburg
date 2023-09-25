@@ -346,6 +346,16 @@ public class TelegramBot
     private void GetJsonDump(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
+        var path = Path.Combine(Setting.WorkDir, "logs");
+        var file = new DirectoryInfo(path).GetFiles().OrderBy(f => f.LastWriteTime).First();
+        var name = file.Name.Replace("log.", "").Replace(".json", "");
+        
+        using Stream stream = System.IO.File.OpenRead(file.FullName);
+        botClient.SendDocumentAsync(
+            chatId: update.Message.Chat.Id,
+            document: InputFile.FromStream(stream:stream,fileName: file.Name ),
+            caption: "log file",
+            cancellationToken: cancellationToken);
     }
 
     #endregion
