@@ -43,7 +43,7 @@ public class Operator
         if ((CurrentSpeiseContainer.DownloadTime - DateTime.Now).Hours > 0)
             LoadSpeiseContainer();
 
-        var today = DateTime.Today.AddDays(-2).ToString("yyyy-MM-dd");
+        var today = DateTime.Today.ToString("yyyy-MM-dd");
         var todayFoods = (
             from s in CurrentSpeiseContainer.Gerichte
             where s.Date == today
