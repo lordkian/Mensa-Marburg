@@ -45,7 +45,8 @@ public class TelegramBot
             ["Post update to Channel"] = PostUpdateToChannel,
             ["Post week report to Channel"] = PostWeekReportToChannel,
             ["Start Auto send"] = StartAutoSend,
-            ["Stop Auto send"] = StopAutoSend
+            ["Stop Auto send"] = StopAutoSend,
+            ["Get Server Time"] = GetServerTime
         };
 
         _telegramBotClient.StartReceiving(
@@ -110,8 +111,9 @@ public class TelegramBot
         var replyKeyboardMarkup = new ReplyKeyboardMarkup(new[]
         {
             new KeyboardButton[] { "Admin" },
-            new KeyboardButton[] { "Get json dump" },
             new KeyboardButton[] { "Channel" },
+            new KeyboardButton[] { "Get json dump" },
+            new KeyboardButton[] { "Get Server Time" }
         })
         {
             ResizeKeyboard = true
@@ -349,13 +351,23 @@ public class TelegramBot
         var path = Path.Combine(Setting.WorkDir, "logs");
         var file = new DirectoryInfo(path).GetFiles().OrderBy(f => f.LastWriteTime).First();
         var name = file.Name.Replace("log.", "").Replace(".json", "");
-        
+
         using Stream stream = System.IO.File.OpenRead(file.FullName);
         botClient.SendDocumentAsync(
             chatId: update.Message.Chat.Id,
-            document: InputFile.FromStream(stream:stream,fileName: file.Name ),
+            document: InputFile.FromStream(stream: stream, fileName: file.Name),
             caption: "log file",
             cancellationToken: cancellationToken);
+    }
+
+    private void GetServerTime(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken)
+    {
+        botClient.SendTextMessageAsync(
+            chatId: update.Message.Chat.Id,
+            text: DateTime.Now.ToString("ddd dd.MM.yyyy : HH:mm"),
+            cancellationToken: cancellationToken);
+        Start(botClient, update, cancellationToken);
     }
 
     #endregion
