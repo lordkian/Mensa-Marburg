@@ -50,7 +50,7 @@ public class Operator
             select s
         ).ToList();
 
-        var text = mittagUpdate ? "Today Menu\n" : "Today Menu (update)\n";
+        var text = mittagUpdate ? "Today Menu (update)\n" : "Today Menu\n";
 
         foreach (var item in todayFoods)
         {
