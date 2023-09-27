@@ -71,5 +71,6 @@ void InitSetting()
     Setting.Instance.ChannelID = long.Parse(tmp);
     Setting.Instance.BaseURL = "https://studentenwerk-marburg.de/essen-trinken/speisekarte/";
     Setting.Instance.IsSet = true;
+    Setting.Instance.SaveLog = true;
     Setting.SaveSetting();
 }

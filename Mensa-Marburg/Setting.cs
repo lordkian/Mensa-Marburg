@@ -9,6 +9,7 @@ public class Setting
     public List<long> AdminsIDs { get; private set; }
     public long ChannelID { get; set; }
     public string BaseURL { get; set; }
+    public bool SaveLog { get; set; }
 
     [JsonIgnore] public static readonly string WorkDir;
 
