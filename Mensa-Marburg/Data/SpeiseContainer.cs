@@ -43,6 +43,8 @@ public class SpeiseContainer
         LoadGenerellKennzeichnungen(doc);
     }
 
+    #region privateMethods
+
     private void LoadDictionary(HtmlDocument doc)
     {
         // load Dics
@@ -190,6 +192,8 @@ public class SpeiseContainer
             GenerellKennzeichnungen.TryAdd(arr[0], arr[1]);
         }
     }
+
+    #endregion
 
     private static string TryDo(Func<string> func)
     {
