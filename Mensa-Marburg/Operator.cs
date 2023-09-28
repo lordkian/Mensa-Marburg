@@ -26,8 +26,27 @@ public class Operator
         var sp = new SpeiseContainer();
         sp.DownloadData();
         sp.DownloadTime = DateTime.Now;
-        
+
+        // save logs
+        if (Setting.Instance.SaveLog)
+            SaveLog(sp);
     }
+
+    #region privateMethods
+
+    private static void SaveLog(SpeiseContainer sp)
+    {
+        var dateStr = DateTime.Now.ToString("yyyy.MM.dd.HH");
+        var dirPath = Path.Combine(Setting.WorkDir, "logs");
+        var name = Path.Combine(dirPath, "log." + dateStr + ".json");
+        var i = 0;
+        while (File.Exists(name))
+            name = Path.Combine(dirPath, "log." + dateStr + "." + ++i + ".json");
+        using var sw = new StreamWriter(name);
+        sw.WriteLine(JsonConvert.SerializeObject(sp));
+    }
+
+    #endregion
 
     public void LoadSpeiseContainer()
     {
