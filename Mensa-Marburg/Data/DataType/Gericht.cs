@@ -4,6 +4,7 @@ public class Gericht : Speise
 {
     public string EssenType { get; set; }
     public string Date { get; set; }
+    public DateTime DateTime { get; set; }
     public string Kosten { get; set; }
     public List<SubGericht> SubGerichte { get; private set; }
 

@@ -68,6 +68,8 @@ public class SpeiseContainer
             gericht.SubGerichte[0].Type2 = TryDo(() => item.Attributes["data-type2"].Value.Trim());
             gericht.SubGerichte[0].Mensa = TryDo(() => MensaDic[item.Attributes["data-canteen"].Value.Trim()]);
             gericht.Date = TryDo(() => item.Attributes["data-date"].Value.Trim());
+            if (!string.IsNullOrEmpty(gericht.Date))
+                gericht.DateTime = DateTime.ParseExact(gericht.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             // load EssenType
             var essenTypeTmp = TryDo(() => item.Attributes["data-type"].Value.Trim());
             if (essenTypeTmp == "")
