@@ -34,6 +34,9 @@ public class Operator
         // post Woche Report
         if (postWoche && DateTime.Now.DayOfWeek == DayOfWeek.Monday)
             WocheReport(sp);
+        
+        // remove unnecessary date
+        sp.Clean();
     }
 
     #region privateMethods

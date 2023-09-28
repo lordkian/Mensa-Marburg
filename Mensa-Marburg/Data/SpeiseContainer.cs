@@ -66,6 +66,14 @@ public class SpeiseContainer
         return text;
     }
 
+    public void Clean()
+    {
+        GerichteTmp.Clear();
+        HTML = "";
+        var today = DateTime.Today.ToString("yyyy-MM-dd");
+        Gerichte.RemoveAll(g => g.Date != today);
+    }
+
     public void DownloadData()
     {
         // load props
