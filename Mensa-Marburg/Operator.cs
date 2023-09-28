@@ -20,6 +20,15 @@ public class Operator
     {
     }
 
+    public void Start(bool postTage = true, bool postUpdate = true, bool postWoche = true)
+    {
+        // load infos
+        var sp = new SpeiseContainer();
+        sp.DownloadData();
+        sp.DownloadTime = DateTime.Now;
+        
+    }
+
     public void LoadSpeiseContainer()
     {
         var dateStr = DateTime.Now.ToString("yyyy.MM.dd.HH");
