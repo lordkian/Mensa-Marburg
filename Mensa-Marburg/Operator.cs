@@ -30,6 +30,10 @@ public class Operator
         // save logs
         if (Setting.Instance.SaveLog)
             SaveLog(sp);
+
+        // post Woche Report
+        if (postWoche && DateTime.Now.DayOfWeek == DayOfWeek.Monday)
+            WocheReport(sp);
     }
 
     #region privateMethods
@@ -44,6 +48,11 @@ public class Operator
             name = Path.Combine(dirPath, "log." + dateStr + "." + ++i + ".json");
         using var sw = new StreamWriter(name);
         sw.WriteLine(JsonConvert.SerializeObject(sp));
+    }
+
+    private static void WocheReport(SpeiseContainer sp)
+    {
+        TelegramBot.Instance.PostToChannel(sp.ToString(MessageStat.Woche));
     }
 
     #endregion
