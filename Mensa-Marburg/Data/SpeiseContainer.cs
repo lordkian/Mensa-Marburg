@@ -1,6 +1,8 @@
+using System.Net;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using Mensa_Marburg.Data.DataType;
+using Newtonsoft.Json;
 
 namespace Mensa_Marburg.Data;
 
@@ -13,7 +15,8 @@ public class SpeiseContainer
     public Dictionary<string, string> MensaDic { get; private set; }
     public Dictionary<string, string> GenerellKennzeichnungen { get; private set; }
     public DateTime DownloadTime { get; set; }
-    private Regex CleanWhiteSpace = new Regex("\\s+");
+    public string HTML { get; set; }
+    [JsonIgnore] private Regex CleanWhiteSpace = new Regex("\\s+");
 
     public void DownloadData()
     {
@@ -25,8 +28,13 @@ public class SpeiseContainer
         MensaDic = new Dictionary<string, string>();
         GenerellKennzeichnungen = new Dictionary<string, string>();
         // load function vars
-        var loader = new HtmlWeb();
-        var doc = loader.Load(Setting.Instance.BaseURL);
+        // var loader = new HtmlWeb();
+        // var doc = loader.Load(Setting.Instance.BaseURL);
+        using (var client = new WebClient())
+            HTML = client.DownloadString(Setting.Instance.BaseURL);
+
+        var doc = new HtmlDocument();
+        doc.LoadHtml(HTML);
 
         LoadDictionary(doc);
         LoadGerichte(doc);
