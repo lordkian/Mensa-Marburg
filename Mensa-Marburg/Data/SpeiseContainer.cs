@@ -16,7 +16,7 @@ public class SpeiseContainer
     public Dictionary<string, string> MensaDic { get; private set; }
     public Dictionary<string, string> GenerellKennzeichnungen { get; private set; }
     public DateTime DownloadTime { get; set; }
-    public string HTML { get; set; }
+    public string HTML { get; private set; }
     [JsonIgnore] private Regex CleanWhiteSpace = new Regex("\\s+");
     [JsonIgnore] private Regex KlammernRegex = new Regex("\\s*\\([^)]*\\)\\s*");
 
