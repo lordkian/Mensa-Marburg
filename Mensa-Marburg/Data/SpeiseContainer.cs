@@ -19,6 +19,25 @@ public class SpeiseContainer
     public string HTML { get; set; }
     [JsonIgnore] private Regex CleanWhiteSpace = new Regex("\\s+");
 
+    public string ToString(MessageStat stat)
+    {
+        string text = "";
+        switch (stat)
+        {
+            case MessageStat.Tage:
+                break;
+            case MessageStat.Update:
+                break;
+            case MessageStat.Woche:
+                break;
+            default:
+                text = ToString();
+                break;
+        }
+
+        return text;
+    }
+
     public void DownloadData()
     {
         // load props
@@ -230,4 +249,11 @@ public class SpeiseContainer
             return "";
         }
     }
+}
+
+public enum MessageStat
+{
+    Tage,
+    Update,
+    Woche
 }
