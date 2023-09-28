@@ -57,7 +57,9 @@ public class Setting
 
     public static void SetNewInstance()
     {
-        Instance ??= new Setting();
-        Instance.IsSet = false;
+        Instance = new Setting
+        {
+            IsSet = false
+        };
     }
 }
