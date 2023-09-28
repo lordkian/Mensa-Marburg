@@ -197,6 +197,26 @@ public class SpeiseContainer
         }
     }
 
+    private bool DatesAreInTheSameWeek(DateTime date1, DateTime date2)
+    {
+        try
+        {
+            var cal = DateTimeFormatInfo.CurrentInfo.Calendar;
+            Console.WriteLine( date1.ToString() +" : " + (int)cal.GetDayOfWeek(date1));
+            Console.WriteLine( date2.ToString() +" : " + (int)cal.GetDayOfWeek(date2));
+            var d1 = date1.Date.AddDays(-1 * (int)cal.GetDayOfWeek(date1));
+            var d2 = date2.Date.AddDays(-1 * (int)cal.GetDayOfWeek(date2));
+
+            return d1 == d2;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("here");
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
     #endregion
 
     private static string TryDo(Func<string> func)
