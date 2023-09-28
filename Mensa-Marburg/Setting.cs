@@ -26,6 +26,11 @@ public class Setting
     private Setting()
     {
         AdminsIDs = new List<long>();
+        // log dir 
+        if (!SaveLog) return;
+        var logDir = Path.Combine(WorkDir, "logs");
+        if (!Directory.Exists(logDir))
+            Directory.CreateDirectory(logDir);
     }
 
     public static void SaveSetting()
