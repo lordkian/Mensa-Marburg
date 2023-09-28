@@ -159,6 +159,7 @@ public class SpeiseContainer
             gerichtTmp.Name = item.First().Name;
             gerichtTmp.EssenType = item.First().EssenType;
             gerichtTmp.Date = item.First().Date;
+            gerichtTmp.DateTime = item.First().DateTime;
             if (String.IsNullOrEmpty(gerichtTmp.Name) || String.IsNullOrEmpty(gerichtTmp.EssenType) ||
                 String.IsNullOrEmpty(gerichtTmp.Date))
                 continue;
