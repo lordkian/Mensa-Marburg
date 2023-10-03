@@ -20,6 +20,8 @@ public class SpeiseContainer
     [JsonIgnore] private Regex CleanWhiteSpace = new Regex("\\s+");
     [JsonIgnore] private Regex KlammernRegex = new Regex("\\s*\\([^)]*\\)\\s*");
 
+    #region ToString
+
     public string ToString(MessageStat stat)
     {
         string text = "";
@@ -72,6 +74,8 @@ public class SpeiseContainer
 
         return text;
     }
+
+    #endregion
 
     public void Clean()
     {
