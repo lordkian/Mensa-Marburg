@@ -10,6 +10,8 @@ public class Setting
     public long ChannelID { get; set; }
     public string BaseURL { get; set; }
     public bool SaveLog { get; set; }
+    public string TagCronString { get; set; }
+    public string UpdateCronString { get; set; }
 
     [JsonIgnore] public static readonly string WorkDir;
 
