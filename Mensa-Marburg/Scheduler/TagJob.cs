@@ -6,10 +6,6 @@ public class TagJob : IJob
 {
     public Task Execute(IJobExecutionContext context)
     {
-        return Task.Factory.StartNew(() =>
-        {
-            Operator.Instance.LoadSpeiseContainer();
-            Operator.Instance.PostToChannel(false);
-        });
+        return Task.Factory.StartNew(() => { Operator.Instance.Start(true, true, true); });
     }
 }
