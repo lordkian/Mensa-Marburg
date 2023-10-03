@@ -327,22 +327,19 @@ public class TelegramBot
     private void PostDailyToChannel(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
-        Operator.Instance.LoadSpeiseContainer();
-        Operator.Instance.PostToChannel(false);
+        Operator.Instance.Start(postTage: true);
     }
 
     private void PostUpdateToChannel(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
-        Operator.Instance.LoadSpeiseContainer();
-        Operator.Instance.PostToChannel(true);
+        Operator.Instance.Start(postUpdate: true);
     }
 
     private void PostWeekReportToChannel(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
-        Operator.Instance.LoadSpeiseContainer();
-        Operator.Instance.PostToWochePlanChannel();
+        Operator.Instance.Start(postWoche: true);
     }
 
     private void GetJsonDump(ITelegramBotClient botClient, Update update,
