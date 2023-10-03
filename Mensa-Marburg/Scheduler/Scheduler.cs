@@ -63,13 +63,13 @@ public class Scheduler
         tagTrigger = TriggerBuilder.Create()
             .WithIdentity("tagTrigger", "tagGroup")
             .StartNow()
-            .WithCronSchedule("0 30 10 ? * MON-FRI") // 10:30 am weekdays
+            .WithCronSchedule(Setting.Instance.TagCronString) // 10:30 am weekdays
             .Build();
 
         nachmittagTrigger = TriggerBuilder.Create()
             .WithIdentity("nachmittagTrigger", "nachmittagGroup")
             .StartNow()
-            .WithCronSchedule("0 20 14 ? * MON-FRI") // 2:20 pm weekdays
+            .WithCronSchedule(Setting.Instance.UpdateCronString) // 2:20 pm weekdays
             .Build();
     }
 }
