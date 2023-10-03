@@ -20,30 +20,34 @@ public class Operator
     {
     }
 
-    public void Start(bool postTage = true, bool postUpdate = true, bool postWoche = true)
+    public void Start(bool postTage = false, bool postUpdate = false, bool postWoche = false)
     {
         // load infos
         var sp = new SpeiseContainer();
         sp.DownloadData();
         sp.DownloadTime = DateTime.Now;
+        var setting = Setting.Instance;
 
         // save logs
         if (Setting.Instance.SaveLog)
             SaveLog(sp);
 
         // post Woche Report
-        if (postWoche && DateTime.Now.DayOfWeek == DayOfWeek.Monday)
+        if ((setting.PostWoche && DateTime.Now.DayOfWeek == DayOfWeek.Monday)
+            || postWoche)
             WocheReport(sp);
 
         // remove unnecessary date
         sp.Clean();
 
         // post Tag report
-        if (postTage && DateTime.Now.Hour >= 14)
+        if ((setting.PostTage && DateTime.Now.Hour >= 14)
+            || postTage)
             TagReport(sp);
-        
+
         // post Tag Update
-        if (postUpdate && DateTime.Now.Hour < 14)
+        if ((setting.PostUpdate && DateTime.Now.Hour < 14)
+            || postUpdate)
             TagUpdateReport(sp);
     }
 
@@ -71,6 +75,7 @@ public class Operator
         TelegramBot.Instance.PostToChannel(
             "Today Menu\n" + sp.ToString(MessageStat.Tage));
     }
+
     private static void TagUpdateReport(SpeiseContainer sp)
     {
         TelegramBot.Instance.PostToChannel(
