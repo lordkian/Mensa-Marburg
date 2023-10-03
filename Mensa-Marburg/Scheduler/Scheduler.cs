@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using Quartz;
 using Quartz.Impl;
 
@@ -7,8 +8,8 @@ public class Scheduler
 {
     private ISchedulerFactory schedFact;
     private IScheduler scheduler;
-    private IJobDetail tagJob, nachmittagJob, wocheJob;
-    private ITrigger tagTrigger, nachmittagTrigger, wocheTrigger;
+    private IJobDetail tagJob;
+    private ITrigger tagTrigger, nachmittagTrigger;
     public static readonly Scheduler Instance;
 
     static Scheduler()
@@ -18,8 +19,8 @@ public class Scheduler
 
     private Scheduler()
     {
-        
     }
+
     public async void Init()
     {
         // Initialize scheduler
@@ -34,20 +35,20 @@ public class Scheduler
 
     public async void StartSchedule()
     {
-        await scheduler.ScheduleJob(tagJob, tagTrigger);
-        await scheduler.ScheduleJob(nachmittagJob, nachmittagTrigger);
-        await scheduler.ScheduleJob(wocheJob, wocheTrigger);
+        var list = new List<ITrigger>() { tagTrigger, nachmittagTrigger };
+        await scheduler.ScheduleJob(tagJob, new ReadOnlyCollection<ITrigger>(list), true);
     }
 
     public async void StopSchedule()
     {
         await scheduler.Shutdown();
     }
+
     public async void PauseSchedule()
     {
         await scheduler.PauseAll();
     }
-    
+
     public async void ResumeSchedule()
     {
         await scheduler.ResumeAll();
@@ -57,12 +58,6 @@ public class Scheduler
     {
         tagJob = JobBuilder.Create<TagJob>()
             .WithIdentity("tagJob", "tagGroup")
-            .Build();
-        nachmittagJob = JobBuilder.Create<NachmittagJob>()
-            .WithIdentity("nachmittagJob", "nachmittagGroup")
-            .Build();
-        wocheJob = JobBuilder.Create<WocheJob>()
-            .WithIdentity("wocheJob", "wocheGroup")
             .Build();
 
         tagTrigger = TriggerBuilder.Create()
@@ -75,12 +70,6 @@ public class Scheduler
             .WithIdentity("nachmittagTrigger", "nachmittagGroup")
             .StartNow()
             .WithCronSchedule("0 20 14 ? * MON-FRI") // 2:20 pm weekdays
-            .Build();
-
-        wocheTrigger = TriggerBuilder.Create()
-            .WithIdentity("wocheTrigger", "wocheGroup")
-            .StartNow()
-            .WithCronSchedule("0 0 10 ? * MON") // 10 am mondays
             .Build();
     }
 }
