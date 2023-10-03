@@ -28,17 +28,44 @@ public class SpeiseContainer
         switch (stat)
         {
             case MessageStat.Tage:
-                break;
-            case MessageStat.Update:
+                text = TageToString();
                 break;
             case MessageStat.Woche:
-
                 text = "This Week Menu:\n\n";
                 text += WocheToString();
                 break;
             default:
                 text = ToString();
                 break;
+        }
+
+        return text;
+    }
+
+    private string TageToString()
+    {
+        var text = "";
+        foreach (var item in Gerichte)
+        {
+            var cleanText = KlammernRegex.Replace(item.Name, " ");
+            cleanText = CleanWhiteSpace.Replace(cleanText, " ");
+            text += $"{item.EssenType}: {cleanText} ({item.Kosten}):\n";
+            foreach (var itemSubGericht in item.SubGerichte)
+                text += $"{itemSubGericht.Mensa} : {itemSubGericht.MenuArt}\n";
+            /* text += "Kennzeichnungen: ";
+                    foreach (var keypair in item.Kennzeichnungen)
+                        text += keypair.Key + ") " + keypair.Value + " ";
+                    text += "\n\n";*/
+        }
+
+        foreach (var item in Beilagen)
+        {
+            var cleanText = KlammernRegex.Replace(item.Name, " ");
+            cleanText = CleanWhiteSpace.Replace(cleanText, " ");
+            text += $"{item.Type}: {cleanText}\n";
+            /* foreach (var keypair in item.Kennzeichnungen)
+                        text += keypair.Key + ") " + keypair.Value + " ";
+                    text += "\n\n";*/
         }
 
         return text;
@@ -268,8 +295,8 @@ public class SpeiseContainer
         try
         {
             var cal = DateTimeFormatInfo.CurrentInfo.Calendar;
-            Console.WriteLine( date1.ToString() +" : " + (int)cal.GetDayOfWeek(date1));
-            Console.WriteLine( date2.ToString() +" : " + (int)cal.GetDayOfWeek(date2));
+            Console.WriteLine(date1.ToString() + " : " + (int)cal.GetDayOfWeek(date1));
+            Console.WriteLine(date2.ToString() + " : " + (int)cal.GetDayOfWeek(date2));
             var d1 = date1.Date.AddDays(-1 * (int)cal.GetDayOfWeek(date1));
             var d2 = date2.Date.AddDays(-1 * (int)cal.GetDayOfWeek(date2));
 
@@ -301,6 +328,5 @@ public class SpeiseContainer
 public enum MessageStat
 {
     Tage,
-    Update,
     Woche
 }
