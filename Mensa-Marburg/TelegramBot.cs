@@ -170,6 +170,9 @@ public class TelegramBot
         CancellationToken cancellationToken)
     {
         Scheduler.Scheduler.Instance.ResumeSchedule();
+        Thread.Sleep(1);
+        Setting.Instance.EnableService = true;
+        Setting.SaveSetting();
         botClient.SendTextMessageAsync(
             chatId: update.Message.Chat.Id,
             text: "Done",
@@ -181,6 +184,8 @@ public class TelegramBot
         CancellationToken cancellationToken)
     {
         Scheduler.Scheduler.Instance.PauseSchedule();
+        Setting.Instance.EnableService = false;
+        Setting.SaveSetting();
         botClient.SendTextMessageAsync(
             chatId: update.Message.Chat.Id,
             text: "Done",
