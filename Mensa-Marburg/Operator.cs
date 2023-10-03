@@ -34,9 +34,17 @@ public class Operator
         // post Woche Report
         if (postWoche && DateTime.Now.DayOfWeek == DayOfWeek.Monday)
             WocheReport(sp);
-        
+
         // remove unnecessary date
         sp.Clean();
+
+        // post Tag report
+        if (postTage && DateTime.Now.Hour >= 14)
+            TagReport(sp);
+        
+        // post Tag Update
+        if (postUpdate && DateTime.Now.Hour < 14)
+            TagUpdateReport(sp);
     }
 
     #region privateMethods
@@ -56,6 +64,17 @@ public class Operator
     private static void WocheReport(SpeiseContainer sp)
     {
         TelegramBot.Instance.PostToChannel(sp.ToString(MessageStat.Woche));
+    }
+
+    private static void TagReport(SpeiseContainer sp)
+    {
+        TelegramBot.Instance.PostToChannel(
+            "Today Menu\n" + sp.ToString(MessageStat.Tage));
+    }
+    private static void TagUpdateReport(SpeiseContainer sp)
+    {
+        TelegramBot.Instance.PostToChannel(
+            "Today Menu (update)\n" + sp.ToString(MessageStat.Tage));
     }
 
     #endregion
