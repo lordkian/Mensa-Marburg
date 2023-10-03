@@ -32,35 +32,42 @@ public class SpeiseContainer
             case MessageStat.Woche:
 
                 text = "This Week Menu:\n\n";
-
-                var grouped = (from gericht in Gerichte
-                    where DatesAreInTheSameWeek(gericht.DateTime, DateTime.Now)
-                    group gericht by gericht.Date
-                    into myGroup
-                    select myGroup);
-
-                var dic = new SortedDictionary<DateTime, List<Gericht>>();
-                foreach (var itemGrouped in grouped)
-                {
-                    var date = itemGrouped.First().DateTime;
-                    dic[date] = new List<Gericht>();
-                    dic[date].AddRange(itemGrouped);
-                }
-                foreach (var itemList in dic.Keys)
-                {
-                    text += itemList.ToString("ddd, MM.dd") + ":\n\n";
-                    foreach (var item in dic[itemList])
-                    {
-                        var cleanText = KlammernRegex.Replace(item.Name, " ");
-                        cleanText = CleanWhiteSpace.Replace(cleanText, " ");
-                        text += $"{item.EssenType}: {cleanText} ({item.Kosten})\n";
-                    }
-                }
-
+                text += WocheToString();
                 break;
             default:
                 text = ToString();
                 break;
+        }
+
+        return text;
+    }
+
+    private string WocheToString()
+    {
+        var text = "";
+        var grouped = (from gericht in Gerichte
+            where DatesAreInTheSameWeek(gericht.DateTime, DateTime.Now)
+            group gericht by gericht.Date
+            into myGroup
+            select myGroup);
+
+        var dic = new SortedDictionary<DateTime, List<Gericht>>();
+        foreach (var itemGrouped in grouped)
+        {
+            var date = itemGrouped.First().DateTime;
+            dic[date] = new List<Gericht>();
+            dic[date].AddRange(itemGrouped);
+        }
+
+        foreach (var itemList in dic.Keys)
+        {
+            text += itemList.ToString("ddd, MM.dd") + ":\n\n";
+            foreach (var item in dic[itemList])
+            {
+                var cleanText = KlammernRegex.Replace(item.Name, " ");
+                cleanText = CleanWhiteSpace.Replace(cleanText, " ");
+                text += $"{item.EssenType}: {cleanText} ({item.Kosten})\n";
+            }
         }
 
         return text;
