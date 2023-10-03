@@ -70,9 +70,12 @@ void InitSetting()
 
     Setting.Instance.ChannelID = long.Parse(tmp);
     Setting.Instance.BaseURL = "https://studentenwerk-marburg.de/essen-trinken/speisekarte/";
-    Setting.Instance.IsSet = true;
-    Setting.Instance.SaveLog = true;
     Setting.Instance.TagCronString = "0 30 10 ? * MON-FRI"; // 10:30 am weekdays
     Setting.Instance.UpdateCronString = "0 20 14 ? * MON-FRI"; // 2:20 pm weekdays
+    Setting.Instance.IsSet = true;
+    Setting.Instance.SaveLog = true;
+    Setting.Instance.PostTage = true;
+    Setting.Instance.PostUpdate = true;
+    Setting.Instance.PostWoche = true;
     Setting.SaveSetting();
 }
