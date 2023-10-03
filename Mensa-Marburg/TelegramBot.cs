@@ -40,12 +40,16 @@ public class TelegramBot
             ["List Admin"] = ListAdmin,
             ["Set Channel ID"] = SetChannelID,
             ["Channel"] = Channel,
-            ["Get json dump"] = GetJsonDump,
             ["Post daily to Channel"] = PostDailyToChannel,
             ["Post update to Channel"] = PostUpdateToChannel,
             ["Post week report to Channel"] = PostWeekReportToChannel,
             ["Start Auto send"] = StartAutoSend,
             ["Stop Auto send"] = StopAutoSend,
+            ["Log"] = Log,
+            ["Get today Export"] = GetTodayExport,
+            ["Enable Log"] = EnableLog,
+            ["Disable Log"] = DisableLog,
+            ["Get json dump"] = GetJsonDump,
             ["Get Server Time"] = GetServerTime
         };
 
@@ -112,7 +116,7 @@ public class TelegramBot
         {
             new KeyboardButton[] { "Admin" },
             new KeyboardButton[] { "Channel" },
-            new KeyboardButton[] { "Get json dump" },
+            new KeyboardButton[] { "Log" },
             new KeyboardButton[] { "Get Server Time" }
         })
         {
@@ -162,6 +166,29 @@ public class TelegramBot
         botClient.SendTextMessageAsync(
             chatId: update.Message.Chat.Id,
             text: "Admin Menu:",
+            replyMarkup: replyKeyboardMarkup,
+            cancellationToken: cancellationToken);
+    }
+
+    private void Log(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken)
+    {
+        var enableLog = Setting.Instance.SaveLog ? "Disable Log" : "Enable Log";
+        var replyKeyboardMarkup = new ReplyKeyboardMarkup(new[]
+        {
+            new KeyboardButton[] { "Get json dump" },
+            new KeyboardButton[] { "Get today Export" },
+            new KeyboardButton[] { enableLog }
+            // new KeyboardButton[] { "Enable Log" },
+            // new KeyboardButton[] { "Disable Log" },
+           
+        })
+        {
+            ResizeKeyboard = true
+        };
+        botClient.SendTextMessageAsync(
+            chatId: update.Message.Chat.Id,
+            text: "Log Menu:",
             replyMarkup: replyKeyboardMarkup,
             cancellationToken: cancellationToken);
     }
@@ -360,6 +387,35 @@ public class TelegramBot
             document: InputFile.FromStream(stream: stream, fileName: file.Name),
             caption: "log file",
             cancellationToken: cancellationToken);
+    }
+
+    private void GetTodayExport(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken)
+    {
+    }
+
+    private void EnableLog(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken)
+    {
+        Setting.Instance.SaveLog = true;
+        Setting.SaveSetting();
+        botClient.SendTextMessageAsync(
+            chatId: update.Message.Chat.Id,
+            text: "Done",
+            cancellationToken: cancellationToken);
+        Start(botClient, update, cancellationToken);
+    }
+
+    private void DisableLog(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken)
+    {
+        Setting.Instance.SaveLog = false;
+        Setting.SaveSetting();
+        botClient.SendTextMessageAsync(
+            chatId: update.Message.Chat.Id,
+            text: "Done",
+            cancellationToken: cancellationToken);
+        Start(botClient, update, cancellationToken);
     }
 
     private void GetServerTime(ITelegramBotClient botClient, Update update,
