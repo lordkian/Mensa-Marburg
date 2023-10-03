@@ -58,15 +58,32 @@ public class SpeiseContainer
                     text += "\n\n";*/
         }
 
-        foreach (var item in Beilagen)
+        var grouped = from beilage in Beilagen
+            group beilage by beilage.Type
+            into beilageType
+            select beilageType;
+        foreach (var groupedItem in grouped)
+        {
+            text += groupedItem.Key + ":\n";
+            var tmp = new List<string>();
+            foreach (var item in groupedItem)
+            {
+                var cleanText = KlammernRegex.Replace(item.Name, " ");
+                cleanText = CleanWhiteSpace.Replace(cleanText, " ");
+                tmp.Add(cleanText);
+            }
+
+            text += string.Join(" , ", tmp) + "\n";
+        }
+        /*foreach (var item in Beilagen)
         {
             var cleanText = KlammernRegex.Replace(item.Name, " ");
             cleanText = CleanWhiteSpace.Replace(cleanText, " ");
             text += $"{item.Type}: {cleanText}\n";
-            /* foreach (var keypair in item.Kennzeichnungen)
-                        text += keypair.Key + ") " + keypair.Value + " ";
-                    text += "\n\n";*/
-        }
+            // foreach (var keypair in item.Kennzeichnungen)
+            //            text += keypair.Key + ") " + keypair.Value + " ";
+            //        text += "\n\n";
+        }*/
 
         return text;
     }
