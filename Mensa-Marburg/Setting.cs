@@ -8,8 +8,11 @@ public class Setting
     public string TelegramBotToken { get; set; }
     public List<long> AdminsIDs { get; private set; }
     public long ChannelID { get; set; }
-    public string BaseURL { get; set; }
     public bool SaveLog { get; set; }
+    public bool PostTage { get; set; }
+    public bool PostUpdate { get; set; }
+    public bool PostWoche { get; set; }
+    public string BaseURL { get; set; }
     public string TagCronString { get; set; }
     public string UpdateCronString { get; set; }
 
