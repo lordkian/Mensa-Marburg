@@ -12,6 +12,7 @@ public class Setting
     public bool PostTage { get; set; }
     public bool PostUpdate { get; set; }
     public bool PostWoche { get; set; }
+    public bool EnableService { get; set; }
     public string BaseURL { get; set; }
     public string TagCronString { get; set; }
     public string UpdateCronString { get; set; }

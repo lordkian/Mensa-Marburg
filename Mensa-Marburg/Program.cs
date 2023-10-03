@@ -20,7 +20,7 @@ else if (Setting.Instance.IsSet)
     var sc = Scheduler.Instance;
     var op = Operator.Instance;
     sc.Init();
-    
+
     Console.WriteLine("fertig");
     if (Environment.GetCommandLineArgs().Contains("--in-docker"))
         await Task.Delay(Timeout.Infinite, new CancellationToken()).ConfigureAwait(false);
@@ -73,6 +73,7 @@ void InitSetting()
     Setting.Instance.TagCronString = "0 30 10 ? * MON-FRI"; // 10:30 am weekdays
     Setting.Instance.UpdateCronString = "0 20 14 ? * MON-FRI"; // 2:20 pm weekdays
     Setting.Instance.IsSet = true;
+    Setting.Instance.EnableService = true;
     Setting.Instance.SaveLog = true;
     Setting.Instance.PostTage = true;
     Setting.Instance.PostUpdate = true;
