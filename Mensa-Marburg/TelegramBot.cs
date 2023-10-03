@@ -34,6 +34,7 @@ public class TelegramBot
         dictionary = new Dictionary<string, Action<ITelegramBotClient, Update, CancellationToken>>()
         {
             ["/start"] = Start,
+            ["Back"] = Start,
             ["Admin"] = Admin,
             ["Add Admin"] = AddAdmin,
             ["Remove Admin"] = RemoveAdmin,
@@ -139,6 +140,7 @@ public class TelegramBot
             new KeyboardButton[] { "Post week report to Channel" },
             new KeyboardButton[] { "Stop Auto send" },
             new KeyboardButton[] { "Start Auto send" },
+            new KeyboardButton[] { "Back" },
         })
         {
             ResizeKeyboard = true
@@ -159,6 +161,7 @@ public class TelegramBot
             new KeyboardButton[] { "Add Admin" },
             new KeyboardButton[] { "Remove Admin" },
             new KeyboardButton[] { "Set Channel ID" },
+            new KeyboardButton[] { "Back" },
         })
         {
             ResizeKeyboard = true
@@ -178,10 +181,10 @@ public class TelegramBot
         {
             new KeyboardButton[] { "Get json dump" },
             new KeyboardButton[] { "Get today Export" },
-            new KeyboardButton[] { enableLog }
+            new KeyboardButton[] { enableLog },
             // new KeyboardButton[] { "Enable Log" },
             // new KeyboardButton[] { "Disable Log" },
-           
+            new KeyboardButton[] { "Back" },
         })
         {
             ResizeKeyboard = true
