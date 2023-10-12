@@ -16,7 +16,7 @@ public class Setting
     public string BaseURL { get; set; }
     public string TagCronString { get; set; }
     public string UpdateCronString { get; set; }
-
+    public Dictionary<int,string> Emojis { get; private set; }
     [JsonIgnore] public static readonly string WorkDir;
 
     [JsonIgnore] public static Setting Instance { get; private set; }
@@ -32,6 +32,7 @@ public class Setting
     private Setting()
     {
         AdminsIDs = new List<long>();
+        Emojis = new Dictionary<int, string>();
         // log dir 
         if (!SaveLog) return;
         var logDir = Path.Combine(WorkDir, "logs");
