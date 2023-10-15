@@ -41,9 +41,10 @@ public class TelegramBot
             ["List Admin"] = ListAdmin,
             ["Set Channel ID"] = SetChannelID,
             ["Channel"] = Channel,
-            ["Post daily to Channel"] = PostDailyToChannel,
-            ["Post update to Channel"] = PostUpdateToChannel,
-            ["Post week report to Channel"] = PostWeekReportToChannel,
+            ["Post daily report to Channel"] = PostDailyToChannel,
+            ["Post update report to Channel"] = PostUpdateToChannel,
+            ["Post weekly report report to Channel"] = PostWeekReportToChannel,
+            ["Auto send"] = AutoSend,
             ["Start Auto send"] = StartAutoSend,
             ["Stop Auto send"] = StopAutoSend,
             ["Log"] = Log,
@@ -135,11 +136,10 @@ public class TelegramBot
     {
         var replyKeyboardMarkup = new ReplyKeyboardMarkup(new[]
         {
-            new KeyboardButton[] { "Post daily to Channel" },
-            new KeyboardButton[] { "Post update to Channel" },
-            new KeyboardButton[] { "Post week report to Channel" },
-            new KeyboardButton[] { "Stop Auto send" },
-            new KeyboardButton[] { "Start Auto send" },
+            new KeyboardButton[] { "Post daily report to Channel" },
+            new KeyboardButton[] { "Post update report to Channel" },
+            new KeyboardButton[] { "Post weekly report report to Channel" },
+            new KeyboardButton[] { "Auto send" },
             new KeyboardButton[] { "Back" },
         })
         {
