@@ -180,9 +180,9 @@ public class TelegramBot
         CancellationToken cancellationToken)
     {
         var autoSend = Setting.Instance.EnableService ? "Stop Auto send" : "Start Auto send";
-        var dailySend = Setting.Instance.PostTage ? "Stop Auto send" : "Start Auto send";
-        var updateSend = Setting.Instance.PostUpdate ? "Stop Auto send" : "Start Auto send";
-        var weeklySend = Setting.Instance.PostWoche ? "Stop Auto send" : "Start Auto send";
+        var dailySend = Setting.Instance.PostTage ?  "Stop daily report"  : "Start daily report" ;
+        var updateSend = Setting.Instance.PostUpdate ? "Stop update report": "Start update report";
+        var weeklySend = Setting.Instance.PostWoche ? "Stop weekly report report": "Start weekly report report";
         var replyKeyboardMarkup = new ReplyKeyboardMarkup(new[]
         {
             // new KeyboardButton[] { "Stop Auto send" },
@@ -204,7 +204,7 @@ public class TelegramBot
         };
         botClient.SendTextMessageAsync(
             chatId: update.Message.Chat.Id,
-            text: "Main Menu:",
+            text: "Enabling/ Disabling automatic sender :",
             replyMarkup: replyKeyboardMarkup,
             cancellationToken: cancellationToken);
     }
