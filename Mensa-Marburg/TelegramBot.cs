@@ -61,7 +61,7 @@ public class TelegramBot
             },
             ["Start update report"] = (bot, update, token) =>
             {
-                SetVar(bot, update, token, SettingVar.PostUpdate, false);
+                SetVar(bot, update, token, SettingVar.PostUpdate, true);
             },
             ["Stop weekly report report"] = (bot, update, token) =>
             {
@@ -69,7 +69,7 @@ public class TelegramBot
             },
             ["Start weekly report report"] = (bot, update, token) =>
             {
-                SetVar(bot, update, token, SettingVar.PostWoche, false);
+                SetVar(bot, update, token, SettingVar.PostWoche, true);
             },
             ["Log"] = Log,
             ["Get today Export"] = GetTodayExport,
@@ -180,9 +180,9 @@ public class TelegramBot
         CancellationToken cancellationToken)
     {
         var autoSend = Setting.Instance.EnableService ? "Stop Auto send" : "Start Auto send";
-        var dailySend = Setting.Instance.PostTage ?  "Stop daily report"  : "Start daily report" ;
-        var updateSend = Setting.Instance.PostUpdate ? "Stop update report": "Start update report";
-        var weeklySend = Setting.Instance.PostWoche ? "Stop weekly report report": "Start weekly report report";
+        var dailySend = Setting.Instance.PostTage ? "Stop daily report" : "Start daily report";
+        var updateSend = Setting.Instance.PostUpdate ? "Stop update report" : "Start update report";
+        var weeklySend = Setting.Instance.PostWoche ? "Stop weekly report report" : "Start weekly report report";
         var replyKeyboardMarkup = new ReplyKeyboardMarkup(new[]
         {
             // new KeyboardButton[] { "Stop Auto send" },
