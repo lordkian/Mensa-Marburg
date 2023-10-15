@@ -57,12 +57,14 @@ public class Operator
     {
         var dateStr = DateTime.Now.ToString("yyyy.MM.dd.HH");
         var dirPath = Path.Combine(Setting.WorkDir, "logs");
-        var name = Path.Combine(dirPath, "log." + dateStr + ".json");
+        var name = Path.Combine(dirPath, "log." + dateStr);
         var i = 0;
-        while (File.Exists(name))
-            name = Path.Combine(dirPath, "log." + dateStr + "." + ++i + ".json");
-        using var sw = new StreamWriter(name);
+        while (File.Exists(name + ".json"))
+            name = Path.Combine(dirPath, "log." + dateStr + "." + ++i);
+        using var sw = new StreamWriter(name + ".json");
         sw.WriteLine(JsonConvert.SerializeObject(sp));
+        using var sw2 = new StreamWriter(name + ".html");
+        sw2.WriteLine(sp.HTML);
     }
 
     private static void WocheReport(SpeiseContainer sp)
