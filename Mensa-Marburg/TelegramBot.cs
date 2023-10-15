@@ -45,18 +45,36 @@ public class TelegramBot
             ["Post update report to Channel"] = PostUpdateToChannel,
             ["Post weekly report report to Channel"] = PostWeekReportToChannel,
             ["Auto send"] = AutoSend,
-            ["Start Auto send"] = StartAutoSend,
-            ["Stop Auto send"] = StopAutoSend,
-            // [ "Stop daily report" ]
-            // [ "Start daily report" ]
-            // [ "Stop update report" ]
-            // [ "Start update report" ]
-            // [ "Stop weekly report report" ]
-            // [ "Start weekly report report" ]
+            ["Start Auto send"] = (bot, update, token) =>
+            {
+                SetVar(bot, update, token, SettingVar.EnableService, true);
+            },
+            ["Stop Auto send"] = (bot, update, token) =>
+            {
+                SetVar(bot, update, token, SettingVar.EnableService, false);
+            },
+            ["Stop daily report"] = (bot, update, token) => { SetVar(bot, update, token, SettingVar.PostTage, false); },
+            ["Start daily report"] = (bot, update, token) => { SetVar(bot, update, token, SettingVar.PostTage, true); },
+            ["Stop update report"] = (bot, update, token) =>
+            {
+                SetVar(bot, update, token, SettingVar.PostUpdate, false);
+            },
+            ["Start update report"] = (bot, update, token) =>
+            {
+                SetVar(bot, update, token, SettingVar.PostUpdate, false);
+            },
+            ["Stop weekly report report"] = (bot, update, token) =>
+            {
+                SetVar(bot, update, token, SettingVar.PostWoche, false);
+            },
+            ["Start weekly report report"] = (bot, update, token) =>
+            {
+                SetVar(bot, update, token, SettingVar.PostWoche, false);
+            },
             ["Log"] = Log,
             ["Get today Export"] = GetTodayExport,
-            ["Enable Log"] = EnableLog,
-            ["Disable Log"] = DisableLog,
+            ["Enable Log"] = (bot, update, token) => { SetVar(bot, update, token, SettingVar.Log, true); },
+            ["Disable Log"] = (bot, update, token) => { SetVar(bot, update, token, SettingVar.Log, false); },
             ["Get json dump"] = GetJsonDump,
             ["Get Server Time"] = GetServerTime
         };
@@ -436,6 +454,36 @@ public class TelegramBot
     {
     }
 
+    private void SetVar(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken, SettingVar var, bool val)
+    {
+        switch (var)
+        {
+            case SettingVar.EnableService:
+                Setting.Instance.EnableService = val;
+                break;
+            case SettingVar.PostTage:
+                Setting.Instance.PostTage = val;
+                break;
+            case SettingVar.PostUpdate:
+                Setting.Instance.PostUpdate = val;
+                break;
+            case SettingVar.PostWoche:
+                Setting.Instance.PostWoche = val;
+                break;
+            case SettingVar.Log:
+                Setting.Instance.SaveLog = val;
+                break;
+        }
+
+        Setting.SaveSetting();
+        botClient.SendTextMessageAsync(
+            chatId: update.Message.Chat.Id,
+            text: "Done",
+            cancellationToken: cancellationToken);
+        Start(botClient, update, cancellationToken);
+    }
+
     private void EnableLog(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
@@ -471,4 +519,13 @@ public class TelegramBot
     }
 
     #endregion
+}
+
+enum SettingVar
+{
+    EnableService,
+    PostTage,
+    PostUpdate,
+    PostWoche,
+    Log
 }
