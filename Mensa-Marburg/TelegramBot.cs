@@ -253,33 +253,6 @@ public class TelegramBot
             cancellationToken: cancellationToken);
     }
 
-    private void StartAutoSend(ITelegramBotClient botClient, Update update,
-        CancellationToken cancellationToken)
-    {
-        Scheduler.Scheduler.Instance.ResumeSchedule();
-        Thread.Sleep(1);
-        Setting.Instance.EnableService = true;
-        Setting.SaveSetting();
-        botClient.SendTextMessageAsync(
-            chatId: update.Message.Chat.Id,
-            text: "Done",
-            cancellationToken: cancellationToken);
-        Start(botClient, update, cancellationToken);
-    }
-
-    private void StopAutoSend(ITelegramBotClient botClient, Update update,
-        CancellationToken cancellationToken)
-    {
-        Scheduler.Scheduler.Instance.PauseSchedule();
-        Setting.Instance.EnableService = false;
-        Setting.SaveSetting();
-        botClient.SendTextMessageAsync(
-            chatId: update.Message.Chat.Id,
-            text: "Done",
-            cancellationToken: cancellationToken);
-        Start(botClient, update, cancellationToken);
-    }
-
     private void AddAdmin(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
@@ -476,30 +449,6 @@ public class TelegramBot
                 break;
         }
 
-        Setting.SaveSetting();
-        botClient.SendTextMessageAsync(
-            chatId: update.Message.Chat.Id,
-            text: "Done",
-            cancellationToken: cancellationToken);
-        Start(botClient, update, cancellationToken);
-    }
-
-    private void EnableLog(ITelegramBotClient botClient, Update update,
-        CancellationToken cancellationToken)
-    {
-        Setting.Instance.SaveLog = true;
-        Setting.SaveSetting();
-        botClient.SendTextMessageAsync(
-            chatId: update.Message.Chat.Id,
-            text: "Done",
-            cancellationToken: cancellationToken);
-        Start(botClient, update, cancellationToken);
-    }
-
-    private void DisableLog(ITelegramBotClient botClient, Update update,
-        CancellationToken cancellationToken)
-    {
-        Setting.Instance.SaveLog = false;
         Setting.SaveSetting();
         botClient.SendTextMessageAsync(
             chatId: update.Message.Chat.Id,
