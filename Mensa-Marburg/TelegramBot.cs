@@ -329,7 +329,15 @@ public class TelegramBot
             if (TelegramID.IsMatch(messageText))
             {
                 var id = long.Parse(messageText);
-                if (Setting.Instance.AdminsIDs.Contains(id))
+                if (Setting.Instance.AdminsIDs.Count == 1)
+                {
+                    botClient.SendTextMessageAsync(
+                        chatId: update.Message.Chat.Id,
+                        text: "You must have at least 1 admin",
+                        cancellationToken: cancellationToken);
+                    Start(botClient, update, cancellationToken);
+                }
+                else if (Setting.Instance.AdminsIDs.Contains(id))
                 {
                     Setting.Instance.AdminsIDs.Remove(id);
                     Setting.SaveSetting();
