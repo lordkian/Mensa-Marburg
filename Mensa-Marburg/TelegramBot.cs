@@ -47,6 +47,12 @@ public class TelegramBot
             ["Auto send"] = AutoSend,
             ["Start Auto send"] = StartAutoSend,
             ["Stop Auto send"] = StopAutoSend,
+            // [ "Stop daily report" ]
+            // [ "Start daily report" ]
+            // [ "Stop update report" ]
+            // [ "Start update report" ]
+            // [ "Stop weekly report report" ]
+            // [ "Start weekly report report" ]
             ["Log"] = Log,
             ["Get today Export"] = GetTodayExport,
             ["Enable Log"] = EnableLog,
@@ -140,6 +146,39 @@ public class TelegramBot
             new KeyboardButton[] { "Post update report to Channel" },
             new KeyboardButton[] { "Post weekly report report to Channel" },
             new KeyboardButton[] { "Auto send" },
+            new KeyboardButton[] { "Back" },
+        })
+        {
+            ResizeKeyboard = true
+        };
+        botClient.SendTextMessageAsync(
+            chatId: update.Message.Chat.Id,
+            text: "Main Menu:",
+            replyMarkup: replyKeyboardMarkup,
+            cancellationToken: cancellationToken);
+    }
+
+    private void AutoSend(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken)
+    {
+        var autoSend = Setting.Instance.EnableService ? "Stop Auto send" : "Start Auto send";
+        var dailySend = Setting.Instance.PostTage ? "Stop Auto send" : "Start Auto send";
+        var updateSend = Setting.Instance.PostUpdate ? "Stop Auto send" : "Start Auto send";
+        var weeklySend = Setting.Instance.PostWoche ? "Stop Auto send" : "Start Auto send";
+        var replyKeyboardMarkup = new ReplyKeyboardMarkup(new[]
+        {
+            // new KeyboardButton[] { "Stop Auto send" },
+            // new KeyboardButton[] { "Start Auto send" },
+            new KeyboardButton[] { autoSend },
+            // new KeyboardButton[] { "Stop daily report" },
+            // new KeyboardButton[] { "Start daily report" },
+            new KeyboardButton[] { dailySend },
+            // new KeyboardButton[] { "Stop update report" },
+            // new KeyboardButton[] { "Start update report" },
+            new KeyboardButton[] { updateSend },
+            // new KeyboardButton[] { "Stop weekly report report" },
+            // new KeyboardButton[] { "Start weekly report report" },
+            new KeyboardButton[] { weeklySend },
             new KeyboardButton[] { "Back" },
         })
         {
