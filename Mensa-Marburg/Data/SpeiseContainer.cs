@@ -50,8 +50,12 @@ public class SpeiseContainer
             var cleanText = KlammernRegex.Replace(item.Name, " ");
             cleanText = CleanWhiteSpace.Replace(cleanText, " ");
             text += $"{item.EssenType}: {cleanText} ({item.Kosten}):\n";
-            foreach (var itemSubGericht in item.SubGerichte)
-                text += $"{itemSubGericht.Mensa} : {itemSubGericht.MenuArt}\n";
+            var joined = from sg in item.SubGerichte
+                where !string.IsNullOrEmpty(sg.Mensa.Trim())
+                select sg.Mensa;
+            text += string.Join(", ", joined) + "\n\n";
+            // foreach (var itemSubGericht in item.SubGerichte)
+            //     text += $"{itemSubGericht.Mensa} : {itemSubGericht.MenuArt}\n";
             /* text += "Kennzeichnungen: ";
                     foreach (var keypair in item.Kennzeichnungen)
                         text += keypair.Key + ") " + keypair.Value + " ";
@@ -107,13 +111,15 @@ public class SpeiseContainer
 
         foreach (var itemList in dic.Keys)
         {
-            text += itemList.ToString("ddd, MM.dd") + ":\n\n";
+            text += itemList.ToString("ddd, MM.dd") + ":\n";
             foreach (var item in dic[itemList])
             {
                 var cleanText = KlammernRegex.Replace(item.Name, " ");
                 cleanText = CleanWhiteSpace.Replace(cleanText, " ");
                 text += $"{item.EssenType}: {cleanText} ({item.Kosten})\n";
             }
+
+            text += "\n";
         }
 
         return text;
