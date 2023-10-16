@@ -87,12 +87,19 @@ public class TelegramBot
         );
     }
 
-    public async void PostToChannel(string text)
+    public async void PostToChannel(string text, bool htmlParseMode = false)
     {
-        await _telegramBotClient.SendTextMessageAsync(
-            chatId: Setting.Instance.ChannelID,
-            text: text,
-            cancellationToken: cts.Token);
+        if (htmlParseMode)
+            await _telegramBotClient.SendTextMessageAsync(
+                chatId: Setting.Instance.ChannelID,
+                parseMode: ParseMode.Html,
+                text: text,
+                cancellationToken: cts.Token);
+        else
+            await _telegramBotClient.SendTextMessageAsync(
+                chatId: Setting.Instance.ChannelID,
+                text: text,
+                cancellationToken: cts.Token);
     }
 
     private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,
