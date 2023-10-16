@@ -33,20 +33,20 @@ public class Operator
             SaveLog(sp);
 
         // post Woche Report
-        if ((setting.PostWoche && DateTime.Now.DayOfWeek == DayOfWeek.Monday)
-            || postWoche)
+        if ((setting.PostWoche && DateTime.Now.DayOfWeek == DayOfWeek.Monday
+                               && DateTime.Now.Hour < 14) || postWoche)
             WocheReport(sp);
 
         // remove unnecessary date
         sp.Clean();
 
         // post Tag report
-        if ((setting.PostTage && DateTime.Now.Hour >= 14)
+        if ((setting.PostTage && DateTime.Now.Hour < 14)
             || postTage)
             TagReport(sp);
 
         // post Tag Update
-        if ((setting.PostUpdate && DateTime.Now.Hour < 14)
+        if ((setting.PostUpdate && DateTime.Now.Hour >= 14)
             || postUpdate)
             TagUpdateReport(sp);
     }
