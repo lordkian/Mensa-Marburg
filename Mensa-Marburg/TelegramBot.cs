@@ -15,7 +15,8 @@ public class TelegramBot
     private CancellationTokenSource cts;
     private Dictionary<string, Action<ITelegramBotClient, Update, CancellationToken>> dictionary;
     private Action<ITelegramBotClient, Update, CancellationToken, string>? nonKeyboardAction;
-    private Regex TelegramID = new Regex("^(-)?\\d{6,11}$");
+    private Regex TelegramID = new Regex("^(-)?\\d{6,10}$");
+    private Regex TelegramChannelID = new Regex("^(-)?\\d{6,15}$");
 
     static TelegramBot()
     {
@@ -383,7 +384,7 @@ public class TelegramBot
             cancellationToken: cancellationToken);
         nonKeyboardAction = (botClient, update, cancellationToken, messageText) =>
         {
-            if (TelegramID.IsMatch(messageText))
+            if (TelegramChannelID.IsMatch(messageText))
             {
                 Setting.Instance.ChannelID = long.Parse(messageText);
                 Setting.SaveSetting();
