@@ -69,19 +69,19 @@ public class Operator
 
     private static void WocheReport(SpeiseContainer sp)
     {
-        TelegramBot.Instance.PostToChannel(sp.ToString(MessageStat.Woche));
+        TelegramBot.Instance.PostToChannel(sp.ToString(MessageStat.WocheEmoji),true);
     }
 
     private static void TagReport(SpeiseContainer sp)
     {
         TelegramBot.Instance.PostToChannel(
-            "Today Menu\n" + sp.ToString(MessageStat.Tage));
+            "<i>Today Menu</i>\n" + sp.ToString(MessageStat.TageEmoji),true);
     }
 
     private static void TagUpdateReport(SpeiseContainer sp)
     {
         TelegramBot.Instance.PostToChannel(
-            "Today Menu (update)\n" + sp.ToString(MessageStat.Tage));
+            "<i>Today Menu (update)</i>\n" + sp.ToString(MessageStat.TageEmoji), true);
     }
 
     #endregion
