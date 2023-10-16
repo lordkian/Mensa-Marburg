@@ -16,7 +16,7 @@ public class SpeiseContainer
     public Dictionary<string, string> MensaDic { get; private set; }
     public Dictionary<string, string> GenerellKennzeichnungen { get; private set; }
     public DateTime DownloadTime { get; set; }
-    [JsonIgnore]   public string HTML { get; private set; }
+    [JsonIgnore] public string HTML { get; private set; }
     [JsonIgnore] private Regex CleanWhiteSpace = new Regex("\\s+");
     [JsonIgnore] private Regex KlammernRegex = new Regex("\\s*\\([^)]*\\)\\s*");
 
@@ -30,9 +30,16 @@ public class SpeiseContainer
             case MessageStat.Tage:
                 text = TageToString();
                 break;
+            case MessageStat.TageEmoji:
+                text = TageToStringEmoji();
+                break;
             case MessageStat.Woche:
-                text = "This Week Menu:\n\n";
+                text = "This Week Menu:\n";
                 text += WocheToString();
+                break;
+            case MessageStat.WocheEmoji:
+                text = "This Week Menu:\n";
+                text += WocheToStringEmoji();
                 break;
             default:
                 text = ToString();
@@ -92,6 +99,62 @@ public class SpeiseContainer
         return text;
     }
 
+    private string TageToStringEmoji()
+    {
+        var text = "";
+        foreach (var item in Gerichte)
+        {
+            var cleanText = KlammernRegex.Replace(item.Name, " ");
+            cleanText = CleanWhiteSpace.Replace(cleanText, " ");
+            var essenTypes = item.EssenType.Split("/").Where(s => s.Length > 1).ToList();
+            var essenType = string.Join("\u2795", from et in essenTypes select EssenTypeToString(et));
+            text += $"{essenType} <code><b><u>{cleanText}</u></b></code> {item.Kosten}:\n";
+            // var joined = from sg in item.SubGerichte
+            //     select sg.Mensa;
+            // text += string.Join(", ", joined) + "\n";
+            foreach (var itemSubGericht in item.SubGerichte)
+                text += $"\ud83c\udf7d {itemSubGericht.Mensa} ";
+            //    text += $"{itemSubGericht.Mensa} : {itemSubGericht.MenuArt}\n";
+            text += "\n\n";
+            /* text += "Kennzeichnungen: ";
+                    foreach (var keypair in item.Kennzeichnungen)
+                        text += keypair.Key + ") " + keypair.Value + " ";
+                    text += "\n\n";*/
+        }
+
+        text += "<tg-spoiler>";
+        var grouped = from beilage in Beilagen
+            group beilage by beilage.Type
+            into beilageType
+            select beilageType;
+        foreach (var groupedItem in grouped)
+        {
+            text += BeilageToString(groupedItem.Key) + ":\n";
+            var tmp = new List<string>();
+            foreach (var item in groupedItem)
+            {
+                var cleanText = KlammernRegex.Replace(item.Name, " ");
+                cleanText = CleanWhiteSpace.Replace(cleanText, " ");
+                tmp.Add(cleanText);
+            }
+
+            text += string.Join(" , ", tmp) + "\n";
+        }
+
+        text += "</tg-spoiler>";
+        /*foreach (var item in Beilagen)
+        {
+            var cleanText = KlammernRegex.Replace(item.Name, " ");
+            cleanText = CleanWhiteSpace.Replace(cleanText, " ");
+            text += $"{item.Type}: {cleanText}\n";
+            // foreach (var keypair in item.Kennzeichnungen)
+            //            text += keypair.Key + ") " + keypair.Value + " ";
+            //        text += "\n\n";
+        }*/
+
+        return text;
+    }
+
     private string WocheToString()
     {
         var text = "";
@@ -123,6 +186,82 @@ public class SpeiseContainer
         }
 
         return text;
+    }
+
+    private string WocheToStringEmoji()
+    {
+        var text = "";
+        var grouped = (from gericht in Gerichte
+            where DatesAreInTheSameWeek(gericht.DateTime, DateTime.Now)
+            group gericht by gericht.Date
+            into myGroup
+            select myGroup);
+
+        var dic = new SortedDictionary<DateTime, List<Gericht>>();
+        foreach (var itemGrouped in grouped)
+        {
+            var date = itemGrouped.First().DateTime;
+            dic[date] = new List<Gericht>();
+            dic[date].AddRange(itemGrouped);
+        }
+
+        foreach (var itemList in dic.Keys)
+        {
+            text += itemList.ToString("ddd, MM.dd") + ":\n";
+            foreach (var item in dic[itemList])
+            {
+                var cleanText = KlammernRegex.Replace(item.Name, " ");
+                cleanText = CleanWhiteSpace.Replace(cleanText, " ");
+                var essenTypes = item.EssenType.Split("/").Where(s => s.Length > 1).ToList();
+                var essenType = string.Join("\u2795", from et in essenTypes select EssenTypeToString(et));
+                text += $"{essenType} <code><b><u>{cleanText}</u></b></code> {item.Kosten}\n";
+            }
+
+            text += "\n";
+        }
+
+        return text;
+    }
+
+    private string EssenTypeToString(string EssenType)
+    {
+        // TODO temp solution 
+        switch (EssenType)
+        {
+            case "Vegan":
+                return "\ud83e\udd66 -vegan";
+            case "Vegetarisch":
+                return "\ud83e\udd66";
+            case "Fisch":
+                return "\ud83d\udc1f";
+            case "Geflügel":
+                return "\ud83d\udc14";
+            case "Rind_Kalb":
+                return "\ud83d\udc2e";
+            case "Schwein":
+                return "\ud83d\udc37";
+            default:
+                return "";
+        }
+    }
+
+    private string BeilageToString(BeilageType beilageType)
+    {
+        switch (beilageType)
+        {
+            case BeilageType.Suppen:
+                return "\ud83c\udf72";
+            case BeilageType.warme_Speisen:
+                return "\ud83c\udf5b";
+            case BeilageType.Dessert:
+                return "\ud83c\udf67";
+            case BeilageType.Salat:
+                return "\ud83e\udd57";
+            case BeilageType.Unbekant:
+                return "";
+            default:
+                return "";
+        }
     }
 
     #endregion
@@ -349,5 +488,7 @@ public class SpeiseContainer
 public enum MessageStat
 {
     Tage,
-    Woche
+    TageEmoji,
+    Woche,
+    WocheEmoji
 }
