@@ -6,7 +6,7 @@ This project is a web scraper of [Mensa Website](https://studierendenwerk-marbur
 
 The project is running as a background service on docker container. It fetches data from mentioned website and writes it to Telegram channel using Telegram-API. 
 
-It updates everyday automatically. 
+It posts everyday to a telegram channel automatically. 
 
 
 ![screenshot_MensaMarburg](https://github.com/lordkian/Mensa-Marburg/assets/16001505/97d4ab44-675a-4739-bbb2-2adc0725e004)
