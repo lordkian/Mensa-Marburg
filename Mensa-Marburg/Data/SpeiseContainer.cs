@@ -240,6 +240,10 @@ public class SpeiseContainer
                 return "\ud83d\udc2e";
             case "Schwein":
                 return "\ud83d\udc37";
+            case "Lamm_Schaf":
+                return "\ud83d\udc11";
+            case "Wild":
+                return "\ud83e\udd8c";
             default:
                 return "";
         }
