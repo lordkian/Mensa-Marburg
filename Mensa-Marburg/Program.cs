@@ -36,6 +36,7 @@ else
 
 void InitSetting()
 {
+    // TODO check for logs dir
     var telegramBotTokenRegex = new Regex("/^[0-9]{8,10}:[a-zA-Z0-9_-]{35}$/");
     var TelegramIDRegex = new Regex("^(-)?\\d{6,11}$");
     Setting.SetNewInstance();
