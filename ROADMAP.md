@@ -5,7 +5,7 @@ Here is a quick roadmap for Mensa-Marburg project
 + Add interactive (in terminal) inialization/ configuration for the first run im Docker
 + Add config update function allowing to update program easier
 + Fix known bugs
-+ ** This version will be incompatible with previuse versions. you may need to re-config program **
++ **This version will be incompatible with previuse versions. you may need to _re-config_ program**
 
 ## Version 2.0.1
 + Add developer-friendly documantation
